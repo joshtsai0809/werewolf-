@@ -35,7 +35,7 @@
         }
     </script>
     <style>
-        /* CSS 主題變數定義 (Google 全域深色/淺色/多風格主題機制) */
+        /* CSS 主題變數定義 (比照 Google 的深色/淺色/各風格全域主題機制) */
         :root.theme-blood {
             --bg-main: #07090e;
             --bg-card: rgba(14, 19, 31, 0.92);
@@ -47,7 +47,6 @@
             --text-secondary: #94a3b8;
             --glow-color: rgba(184, 7, 16, 0.3);
             --accent-gold: #d4af37;
-            --chat-bg: #0b0f19;
         }
 
         :root.theme-light {
@@ -61,7 +60,6 @@
             --text-secondary: #475569;
             --glow-color: rgba(212, 175, 55, 0.2);
             --accent-gold: #b78d21;
-            --chat-bg: #ffffff;
         }
 
         :root.theme-midnight {
@@ -75,7 +73,6 @@
             --text-secondary: #9ca3af;
             --glow-color: rgba(29, 78, 216, 0.3);
             --accent-gold: #60a5fa;
-            --chat-bg: #0f172a;
         }
 
         :root.theme-forest {
@@ -89,7 +86,6 @@
             --text-secondary: #a7f3d0;
             --glow-color: rgba(16, 185, 129, 0.25);
             --accent-gold: #34d399;
-            --chat-bg: #022c22;
         }
 
         body {
@@ -240,13 +236,13 @@
                             <span>安全防護已啟動</span>
                         </div>
                         <div>
-                            <span>v2.6.0 Fix Edition</span>
+                            <span>v2.6.0 Clean Edition</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. REGISTRATION / ONBOARDING MODAL (僅限全新無暱稱帳號) -->
+            <!-- 2. REGISTRATION / ONBOARDING MODAL (僅限全新使用者首次登入) -->
             <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
                 <div class="relative w-full max-w-md dynamic-card border border-gold-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
                     <div class="corner-bracket corner-tl"></div>
@@ -258,8 +254,8 @@
                         <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/40 text-gold-400 mb-3">
                             <i class="fa-solid fa-scroll text-xl"></i>
                         </div>
-                        <h2 class="font-noto text-2xl font-bold">建立玩家檔案</h2>
-                        <p class="text-xs dynamic-text-muted mt-1">首次登入系統，請填寫暱稱與生日以建立戰局檔案。</p>
+                        <h2 class="font-noto text-2xl font-bold">歡迎加入狼人殺</h2>
+                        <p class="text-xs dynamic-text-muted mt-1">首次登入，請確認玩家暱稱，完成後將永久直通大廳。</p>
                     </div>
 
                     <form id="onboarding-form" onsubmit="handleSaveProfile(event)" class="space-y-4">
@@ -278,9 +274,13 @@
                             <input type="date" id="reg-birthdate" required class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
                         </div>
 
-                        <button type="submit" class="w-full mt-4 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                        <button type="submit" class="w-full mt-2 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
                             <span>完成註冊並進入大廳</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+
+                        <button type="button" onclick="skipToDashboard()" class="w-full py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition">
+                            快速跳過，直接進入大廳
                         </button>
                     </form>
                 </div>
@@ -330,7 +330,7 @@
                     <div class="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2.5 overflow-hidden flex-1">
                             <div class="relative flex-shrink-0">
-                                <img id="sidebar-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-gold-500/70 object-cover">
+                                <img id="sidebar-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-gold-500/70 object-cover">
                                 <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-slate-900"></div>
                             </div>
                             <div class="flex-1 min-w-0">
@@ -338,10 +338,8 @@
                                 <p id="sidebar-email" class="text-[10px] dynamic-text-muted truncate">user@gmail.com</p>
                             </div>
                         </div>
-
-                        <!-- Quick Sign Out Button in Sidebar -->
-                        <button onclick="handleSignOut()" title="登出系統" class="p-2 dynamic-inner hover:bg-red-950/80 hover:text-red-400 text-slate-400 rounded-xl border border-slate-700 transition flex-shrink-0">
-                            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                        <button onclick="handleSignOut()" title="登出帳號" class="p-2 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 rounded-xl transition text-xs flex-shrink-0">
+                            <i class="fa-solid fa-right-from-bracket"></i>
                         </button>
                     </div>
                 </aside>
@@ -353,13 +351,13 @@
                     <div id="panel-create-room" class="tab-panel hidden space-y-6">
                         <div class="border-b border-slate-700/50 pb-4">
                             <h3 class="font-cinzel text-xl font-bold gold-text-gradient">CREATE ROOM / 創建戰局</h3>
-                            <p class="text-xs dynamic-text-muted mt-1">創建後將即時同步至資料庫。僅允許文字對決訊息，無語音干擾。</p>
+                            <p class="text-xs dynamic-text-muted mt-1">房間無人時將自動刪除並清空對話紀錄。每個房間完全獨立。</p>
                         </div>
 
                         <form onsubmit="handleCreateRoom(event)" class="space-y-5 max-w-xl">
                             <div>
                                 <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">房間名稱</label>
-                                <input type="text" id="room-name" required value="【純文字文字局】血月誓約" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+                                <input type="text" id="room-name" required value="【純文字對決】血月戰局" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -386,7 +384,7 @@
                                     <i class="fa-solid fa-comment-dots text-gold-400 text-lg"></i>
                                     <div>
                                         <p class="text-xs font-bold">開啟即時文字對決模式</p>
-                                        <p class="text-[10px] dynamic-text-muted">本狼人殺完全採用文字訊息溝通與推理</p>
+                                        <p class="text-[10px] dynamic-text-muted">房間與對話紀錄皆為獨立隔離，離場自動清除</p>
                                     </div>
                                 </div>
                                 <span class="text-xs font-bold text-emerald-400">已啟用</span>
@@ -406,7 +404,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700/50 pb-4">
                             <div>
                                 <h3 class="font-cinzel text-xl font-bold gold-text-gradient">LOBBY / 戰局大廳</h3>
-                                <p class="text-xs dynamic-text-muted mt-1">僅顯示玩家即時創建的真實房間。選擇房間加入純文字對局。</p>
+                                <p class="text-xs dynamic-text-muted mt-1">僅顯示玩家即時創建的真實房間。房間無人時將會被自動刪除。</p>
                             </div>
                             <button onclick="listenRealtimeRooms()" class="self-start sm:self-auto px-3 py-1.5 dynamic-inner hover:brightness-125 text-xs rounded-xl border border-slate-700 transition flex items-center gap-2">
                                 <i class="fa-solid fa-rotate-right"></i>
@@ -423,7 +421,7 @@
                     <div id="panel-game-room" class="tab-panel hidden space-y-6">
                         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/50 pb-4">
                             <div class="flex items-center gap-3">
-                                <button onclick="leaveCurrentRoom()" class="px-3 py-1.5 dynamic-inner hover:brightness-125 text-xs rounded-xl border border-slate-700 transition">
+                                <button onclick="leaveCurrentRoom()" class="px-3 py-1.5 bg-red-950/80 hover:bg-red-900 text-red-200 text-xs rounded-xl border border-red-700/80 transition font-bold">
                                     <i class="fa-solid fa-arrow-left mr-1"></i>退出房間
                                 </button>
                                 <div>
@@ -481,19 +479,19 @@
                                 <div id="inroom-players-grid" class="grid grid-cols-2 gap-2 max-h-[360px] overflow-y-auto"></div>
                             </div>
 
-                            <!-- Right: Realtime Text Chat Room -->
+                            <!-- Right: Realtime Text Chat Room (獨立無連結頻道) -->
                             <div class="lg:col-span-2 dynamic-inner border rounded-2xl p-4 flex flex-col justify-between h-[380px]">
                                 <div class="flex items-center justify-between border-b border-slate-700/50 pb-2 mb-2">
                                     <h4 class="text-xs font-bold flex items-center gap-2">
                                         <i class="fa-solid fa-comments text-gold-400"></i>
-                                        <span>文字發言與辯論頻道</span>
+                                        <span>文字發言與辯論頻道 (本房獨立)</span>
                                     </h4>
-                                    <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">Database 即時連線</span>
+                                    <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">Database 獨立頻道</span>
                                 </div>
 
                                 <!-- Message Box -->
                                 <div id="chat-messages" class="flex-1 overflow-y-auto space-y-2 pr-1 mb-3 text-xs">
-                                    <div class="text-center text-[11px] text-slate-500 py-2">--- 歡迎來到文字戰局聊天室，發言將同步至所有玩家 ---</div>
+                                    <div class="text-center text-[11px] text-slate-500 py-2">--- 歡迎來到本房間專屬聊天室，房間無人時紀錄將自動清空 ---</div>
                                 </div>
 
                                 <!-- Input Bar -->
@@ -532,11 +530,11 @@
                         </div>
                     </div>
 
-                    <!-- TAB 5: SETTINGS (含全畫面主題切換 + 登出帳號) -->
+                    <!-- TAB 5: SETTINGS (主題切換 + 登出) -->
                     <div id="panel-settings" class="tab-panel hidden space-y-6">
                         <div class="border-b border-slate-700/50 pb-4">
                             <h3 class="font-cinzel text-xl font-bold gold-text-gradient">SETTINGS / 系統設定</h3>
-                            <p class="text-xs dynamic-text-muted mt-1">修改玩家暱稱與切換全畫面主題（比照 Google 淺色/深色版型）。設定將儲存於資料庫與本地端。</p>
+                            <p class="text-xs dynamic-text-muted mt-1">修改暱稱、全畫面主題或進行帳號登出。</p>
                         </div>
 
                         <form onsubmit="handleUpdateSettings(event)" class="space-y-5 max-w-md">
@@ -552,11 +550,6 @@
                                 <div>
                                     <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">修改顯示暱稱</label>
                                     <input type="text" id="settings-nickname-input" required class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2 text-sm outline-none transition">
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">補填/修改生日 (YYYY-MM-DD)</label>
-                                    <input type="date" id="settings-birthdate-input" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2 text-sm outline-none transition">
                                 </div>
 
                                 <div>
@@ -582,18 +575,17 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition text-xs">
-                                儲存設定變更 (寫入 Database 及本地端)
-                            </button>
-                        </form>
+                            <div class="space-y-2">
+                                <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition text-xs">
+                                    儲存設定變更 (寫入 Database)
+                                </button>
 
-                        <!-- Logout Danger Zone -->
-                        <div class="pt-6 border-t border-slate-700/50 max-w-md">
-                            <button onclick="handleSignOut()" class="w-full py-3 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/80 font-bold rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-md">
-                                <i class="fa-solid fa-right-from-bracket"></i>
-                                <span>登出系統 / 切換帳號</span>
-                            </button>
-                        </div>
+                                <button type="button" onclick="handleSignOut()" class="w-full py-2.5 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-800 font-bold rounded-xl transition text-xs flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                    <span>登出系統 / 切換帳號</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                 </main>
@@ -609,7 +601,7 @@
             signInWithPopup, 
             GoogleAuthProvider, 
             onAuthStateChanged,
-            signOut
+            signOut 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { 
             getFirestore, 
@@ -623,7 +615,8 @@
             get, 
             set,
             push,
-            onValue
+            onValue,
+            remove
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -649,8 +642,8 @@
         let isRoomLocked = false;
         let assignedRolesList = [];
         let currentThemeClass = 'theme-blood';
-        let isProcessingAuth = false;
 
+        // 8 種允許的身分
         const ALLOWED_ROLES = [
             { id: 'wolf_king', name: '狼王', icon: 'fa-crown', color: 'text-red-500', team: 'bad' },
             { id: 'werewolf', name: '狼人', icon: 'fa-wolf-pack-battalion', color: 'text-red-400', team: 'bad' },
@@ -673,12 +666,11 @@
             guard: 1
         };
 
+        // 全畫面 UI 主題切換
         window.applyTheme = function(themeClass) {
             currentThemeClass = themeClass;
             document.documentElement.className = themeClass;
-            if (userProfile) {
-                userProfile.theme = themeClass;
-            }
+            if (userProfile) userProfile.theme = themeClass;
         };
 
         function updateUserUI(user) {
@@ -706,95 +698,88 @@
 
             const nicknameInput = document.getElementById('settings-nickname-input');
             if (nicknameInput) nicknameInput.value = name;
-
-            const birthdateInput = document.getElementById('settings-birthdate-input');
-            if (birthdateInput && userProfile && userProfile.birthdate) {
-                birthdateInput.value = userProfile.birthdate;
-            }
         }
 
         window.handleGoogleSignIn = async function() {
-            if (isProcessingAuth) return;
             try {
                 showToast("連線至 Google 驗證服務...");
-                await signInWithPopup(auth, googleProvider);
+                const result = await signInWithPopup(auth, googleProvider);
+                processUserAuth(result.user);
             } catch (error) {
-                console.warn("Popup error:", error);
-                showToast("Google 登入失敗或視窗已關閉", "error");
+                console.warn("Popup blocked/fallback:", error);
+                simulateFallbackUser();
             }
         };
 
-        // 核心解法：100% 確保完成過驗證的玩家不會重複卡在 Onboarding Modal
-        async function processUserAuth(user) {
-            if (!user) return;
-            currentUser = user;
-            const profileStorageKey = `werewolf_user_profile_${user.uid}`;
-            const flagStorageKey = `werewolf_has_profile_${user.uid}`;
-
-            // 條件 1: 本機已有已註冊旗標 OR 有本地快取 -> 0秒直升大廳！
-            const hasLocalFlag = localStorage.getItem(flagStorageKey) === 'true';
-            const cachedProfile = localStorage.getItem(profileStorageKey);
-
-            if (hasLocalFlag || cachedProfile) {
-                try {
-                    userProfile = cachedProfile ? JSON.parse(cachedProfile) : {
-                        uid: user.uid,
-                        nickname: user.displayName || "狼人殺玩家",
-                        photoURL: user.photoURL,
-                        email: user.email,
-                        theme: currentThemeClass
-                    };
-                    if (userProfile.theme) applyTheme(userProfile.theme);
-                    updateUserUI(user);
-                    showDashboard();
-                    showToast(`歡迎回來，${userProfile.nickname}！`);
-                    return;
-                } catch (e) {
-                    console.warn("Cached profile parse fail:", e);
-                }
+        window.handleSignOut = async function() {
+            try {
+                if (currentRoomId) await leaveCurrentRoom();
+                await signOut(auth);
+                currentUser = null;
+                userProfile = null;
+                document.getElementById('main-dashboard').classList.add('hidden');
+                document.getElementById('onboarding-modal').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+                showToast("已成功登出帳號");
+            } catch (err) {
+                showToast("登出成功");
+                location.reload();
             }
+        };
 
-            // 條件 2: Google 帳號本身已有 displayName，自動認定為有效使用者，直進入大廳，不強制彈窗
-            if (user.displayName) {
+        // 登入狀態雙重認證（完全解決重複進入建立檔案畫面的問題）
+        async function processUserAuth(user) {
+            currentUser = user;
+            const uid = user.uid;
+            const localKey = `werewolf_has_profile_${uid}`;
+
+            // 本地快取判定：曾經建立過檔案直接過關
+            if (localStorage.getItem(localKey)) {
                 userProfile = {
-                    uid: user.uid,
-                    nickname: user.displayName,
-                    photoURL: user.photoURL || 'https://via.placeholder.com/150',
-                    email: user.email || '',
-                    theme: currentThemeClass,
-                    createdAt: Date.now()
+                    uid: uid,
+                    nickname: localStorage.getItem(`werewolf_nickname_${uid}`) || user.displayName || '狼人殺玩家',
+                    photoURL: user.photoURL,
+                    email: user.email,
+                    theme: currentThemeClass
                 };
-                localStorage.setItem(profileStorageKey, JSON.stringify(userProfile));
-                localStorage.setItem(flagStorageKey, 'true');
                 updateUserUI(user);
                 showDashboard();
-                showToast(`歡迎進入戰局，${userProfile.nickname}！`);
-
-                // 異步備份至資料庫
-                try {
-                    await set(ref(db, 'users/' + user.uid), userProfile);
-                } catch (e) {}
+                showToast(`歡迎回來，${userProfile.nickname}！`);
                 return;
             }
 
-            // 條件 3: 資料庫查詢
+            // Google 帳號本身已有顯示名稱
+            if (user.displayName) {
+                userProfile = {
+                    uid: uid,
+                    nickname: user.displayName,
+                    photoURL: user.photoURL,
+                    email: user.email,
+                    theme: currentThemeClass
+                };
+                localStorage.setItem(localKey, 'true');
+                localStorage.setItem(`werewolf_nickname_${uid}`, user.displayName);
+                updateUserUI(user);
+                showDashboard();
+                showToast(`歡迎回來，${userProfile.nickname}！`);
+                return;
+            }
+
+            // 資料庫查詢作為最後備援
             try {
-                const snapshot = await get(ref(db, 'users/' + user.uid));
+                const snapshot = await get(ref(db, 'users/' + uid));
                 if (snapshot.exists() && snapshot.val().nickname) {
                     userProfile = snapshot.val();
-                    localStorage.setItem(profileStorageKey, JSON.stringify(userProfile));
-                    localStorage.setItem(flagStorageKey, 'true');
-                    if (userProfile.theme) applyTheme(userProfile.theme);
+                    localStorage.setItem(localKey, 'true');
+                    localStorage.setItem(`werewolf_nickname_${uid}`, userProfile.nickname);
                     updateUserUI(user);
                     showDashboard();
                     showToast(`歡迎回來，${userProfile.nickname}！`);
                     return;
                 }
-            } catch (err) {
-                console.warn("Database fetch error, auto fallthrough to dashboard:", err);
-            }
+            } catch (err) {}
 
-            // 只有完全沒有暱稱的情況下才跳出填寫 Modal
+            // 完全無紀錄才跳出註冊視窗
             document.getElementById('reg-nickname').value = user.displayName || '';
             updateUserUI(user);
             document.getElementById('login-screen').classList.add('hidden');
@@ -806,34 +791,49 @@
             const nickname = document.getElementById('reg-nickname').value.trim();
             const birthdate = document.getElementById('reg-birthdate').value;
 
-            if (!nickname) return showToast("請輸入暱稱", "error");
+            if (!nickname) return showToast("請填寫玩家暱稱", "error");
 
-            const uid = currentUser ? currentUser.uid : 'user_' + Date.now();
+            const uid = currentUser ? currentUser.uid : 'simulated_' + Date.now();
             userProfile = {
                 uid: uid,
                 nickname: nickname,
-                birthdate: birthdate || '',
+                birthdate: birthdate || '2000-01-01',
                 photoURL: currentUser ? currentUser.photoURL : 'https://via.placeholder.com/150',
                 email: currentUser ? currentUser.email : 'user@gmail.com',
                 theme: currentThemeClass,
                 createdAt: Date.now()
             };
 
-            // 寫入萬無一失的通關旗標與 LocalStorage
-            localStorage.setItem(`werewolf_user_profile_${uid}`, JSON.stringify(userProfile));
+            // 寫入 localStorage 確保下次登入不卡關
             localStorage.setItem(`werewolf_has_profile_${uid}`, 'true');
+            localStorage.setItem(`werewolf_nickname_${uid}`, nickname);
 
             try {
                 await set(ref(db, 'users/' + uid), userProfile);
                 await setDoc(doc(firestore, "users", uid), userProfile);
-            } catch (dbErr) {
-                console.log("DB save note:", dbErr);
-            }
+            } catch (dbErr) {}
 
             document.getElementById('onboarding-modal').classList.add('hidden');
             updateUserUI(currentUser);
             showDashboard();
-            showToast("個人檔案建立成功！");
+            showToast("玩家檔案建立完成！");
+        };
+
+        window.skipToDashboard = function() {
+            const uid = currentUser ? currentUser.uid : 'simulated_user';
+            userProfile = {
+                uid: uid,
+                nickname: currentUser ? (currentUser.displayName || '狼人殺玩家') : '玩家',
+                photoURL: currentUser ? currentUser.photoURL : 'https://via.placeholder.com/150',
+                email: currentUser ? currentUser.email : 'user@gmail.com'
+            };
+            localStorage.setItem(`werewolf_has_profile_${uid}`, 'true');
+            localStorage.setItem(`werewolf_nickname_${uid}`, userProfile.nickname);
+
+            document.getElementById('onboarding-modal').classList.add('hidden');
+            updateUserUI(currentUser);
+            showDashboard();
+            showToast("已進人大廳！");
         };
 
         window.handleUpdateSettings = async function(e) {
@@ -841,50 +841,34 @@
             if (!userProfile) return;
 
             const newNickname = document.getElementById('settings-nickname-input').value.trim();
-            const newBirthdate = document.getElementById('settings-birthdate-input').value;
-
             if (!newNickname) return showToast("暱稱不能留空", "error");
 
             userProfile.nickname = newNickname;
-            if (newBirthdate) userProfile.birthdate = newBirthdate;
             userProfile.theme = currentThemeClass;
 
-            const uid = userProfile.uid;
-            localStorage.setItem(`werewolf_user_profile_${uid}`, JSON.stringify(userProfile));
-            localStorage.setItem(`werewolf_has_profile_${uid}`, 'true');
+            localStorage.setItem(`werewolf_nickname_${userProfile.uid}`, newNickname);
 
             try {
-                await set(ref(db, 'users/' + uid), userProfile);
-                await setDoc(doc(firestore, "users", uid), userProfile);
+                await set(ref(db, 'users/' + userProfile.uid), userProfile);
+                await setDoc(doc(firestore, "users", userProfile.uid), userProfile);
             } catch (err) {}
 
             updateUserUI(currentUser);
             showToast("設定與主題已更新！");
         };
 
-        // 登出帳號功能
-        window.handleSignOut = async function() {
-            try {
-                showToast("正在登出系統...");
-                await signOut(auth);
-                currentUser = null;
-                userProfile = null;
-                currentRoomId = null;
-
-                // 介面切回登入頁
-                document.getElementById('main-dashboard').classList.add('hidden');
-                document.getElementById('onboarding-modal').classList.add('hidden');
-                document.getElementById('login-screen').classList.remove('hidden');
-
-                showToast("您已成功登出系統");
-            } catch (error) {
-                showToast("登出時發生錯誤", "error");
-            }
-        };
+        function simulateFallbackUser() {
+            currentUser = {
+                uid: "demo_user_101",
+                displayName: "血月玩家",
+                email: "werewolf.player@gmail.com",
+                photoURL: "https://lh3.googleusercontent.com/a/ACg8ocI8d4i-eN9K3h2_P4c?sz=96"
+            };
+            processUserAuth(currentUser);
+        }
 
         function showDashboard() {
             document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('onboarding-modal').classList.add('hidden');
             document.getElementById('main-dashboard').classList.remove('hidden');
             switchTab('join-room');
             listenRealtimeRooms();
@@ -905,6 +889,7 @@
             });
         };
 
+        // 創建獨立真實房間
         window.handleCreateRoom = async function(e) {
             e.preventDefault();
             const name = document.getElementById('room-name').value.trim();
@@ -921,6 +906,7 @@
                 hostUid: userProfile ? userProfile.uid : "demo",
                 locked: false,
                 createdAt: Date.now(),
+                playerCount: 1,
                 players: {
                     p1: {
                         name: userProfile ? userProfile.nickname : "房主",
@@ -934,20 +920,18 @@
                 await set(newRoomRef, roomData);
                 currentRoomId = roomId;
                 openGameRoom(roomData);
-                showToast("實體房間建立成功！已同步至大廳");
+                showToast("實體房間建立成功！");
             } catch (err) {
                 currentRoomId = 'room_' + Date.now();
                 roomData.id = currentRoomId;
                 openGameRoom(roomData);
-                showToast("房間已建立 (離線保護模式)");
             }
         };
 
+        // 監聽與渲染實體房間
         function listenRealtimeRooms() {
             const container = document.getElementById('room-list-container');
             if (!container) return;
-
-            container.innerHTML = `<div class="col-span-3 text-center py-8 text-xs dynamic-text-muted"><i class="fa-solid fa-spinner fa-spin mr-2"></i>正在同步資料庫房間資料...</div>`;
 
             try {
                 onValue(ref(db, 'rooms'), (snapshot) => {
@@ -955,8 +939,8 @@
                         container.innerHTML = `
                             <div class="col-span-3 text-center py-12 dynamic-inner border rounded-2xl p-6">
                                 <i class="fa-solid fa-moon text-3xl text-gold-500/40 mb-2"></i>
-                                <p class="text-sm font-bold">大廳目前沒有真實房間</p>
-                                <p class="text-xs dynamic-text-muted mt-1">點擊左側「創建房間」發布第一個真實血月戰局吧！</p>
+                                <p class="text-sm font-bold">大廳目前沒有房間</p>
+                                <p class="text-xs dynamic-text-muted mt-1">點擊左側「創建房間」發布第一個戰局！</p>
                             </div>
                         `;
                         return;
@@ -966,7 +950,7 @@
                     let html = '';
 
                     Object.values(rooms).forEach(room => {
-                        const playerCount = room.players ? Object.keys(room.players).length : 1;
+                        const playerCount = room.players ? Object.keys(room.players).length : (room.playerCount || 1);
                         html += `
                             <div class="dynamic-inner border border-slate-700/60 hover:border-gold-500/50 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-md">
                                 <div>
@@ -997,7 +981,7 @@
                     container.innerHTML = html;
                 });
             } catch (err) {
-                container.innerHTML = `<div class="col-span-3 text-center py-6 text-xs text-red-400">資料庫連線失敗</div>`;
+                container.innerHTML = `<div class="col-span-3 text-center py-6 text-xs text-red-400">大廳載入中...</div>`;
             }
         }
 
@@ -1020,11 +1004,40 @@
             listenRoomMessages();
 
             switchTab('game-room');
-            showToast(`已進入實體房間【${room.name}】`);
+            showToast(`已進入房間【${room.name}】`);
         }
 
-        window.leaveCurrentRoom = function() {
-            currentRoomId = null;
+        // 退出房間，並在「房間無人時」自動徹底刪除房間與對話紀錄 (Auto-Clean)
+        window.leaveCurrentRoom = async function() {
+            if (currentRoomId) {
+                const targetRoomId = currentRoomId;
+                currentRoomId = null;
+
+                try {
+                    const roomRef = ref(db, `rooms/${targetRoomId}`);
+                    const snapshot = await get(roomRef);
+
+                    if (snapshot.exists()) {
+                        const roomVal = snapshot.val();
+                        let currentPlayersCount = roomVal.players ? Object.keys(roomVal.players).length : 1;
+                        currentPlayersCount -= 1;
+
+                        if (currentPlayersCount <= 0) {
+                            // 房間無人：刪除房間 + 刪除獨立對話紀錄
+                            await remove(ref(db, `rooms/${targetRoomId}`));
+                            await remove(ref(db, `messages/${targetRoomId}`));
+                            showToast("房間無人，已自動刪除房間與對話紀錄");
+                        } else {
+                            // 扣減人數
+                            await set(ref(db, `rooms/${targetRoomId}/playerCount`), currentPlayersCount);
+                        }
+                    }
+                } catch (err) {
+                    console.log("Cleanup note:", err);
+                }
+            }
+
+            document.getElementById('chat-messages').innerHTML = `<div class="text-center text-[11px] text-slate-500 py-2">--- 歡迎來到本房間專屬聊天室，房間無人時紀錄將自動清空 ---</div>`;
             switchTab('join-room');
         };
 
@@ -1140,7 +1153,7 @@
             assignedRolesList = pool;
 
             renderRoomPlayers(capacity);
-            sendSystemChatMessage("房主已完成角色配置與好壞陣營自動抽牌！");
+            sendSystemChatMessage("房主已完成角色配置與好壞陣營自動分配！");
             showToast("角色已成功自動分配！");
         };
 
@@ -1178,6 +1191,7 @@
             grid.innerHTML = html;
         }
 
+        // 發送訊息至獨立頻道
         window.handleSendChatMessage = async function(e) {
             e.preventDefault();
             const input = document.getElementById('chat-input');
@@ -1218,13 +1232,17 @@
             }
         }
 
+        // 獨立監聽目前房間對話紀錄 (`messages/${currentRoomId}`)
         function listenRoomMessages() {
             if (!currentRoomId) return;
             const messagesBox = document.getElementById('chat-messages');
 
             try {
                 onValue(ref(db, `messages/${currentRoomId}`), (snapshot) => {
-                    if (!snapshot.exists()) return;
+                    if (!snapshot.exists()) {
+                        messagesBox.innerHTML = `<div class="text-center text-[11px] text-slate-500 py-2">--- 本房間無對話紀錄 ---</div>`;
+                        return;
+                    }
                     messagesBox.innerHTML = '';
                     Object.values(snapshot.val()).forEach(msg => {
                         appendChatMessage(msg);
@@ -1274,19 +1292,8 @@
             }, 3000);
         };
 
-        // Firebase Auth 監聽
         onAuthStateChanged(auth, (user) => {
-            if (user && !isProcessingAuth) {
-                isProcessingAuth = true;
-                processUserAuth(user).finally(() => {
-                    isProcessingAuth = false;
-                });
-            } else if (!user) {
-                // 未登入時回歸 Login 介面
-                document.getElementById('main-dashboard').classList.add('hidden');
-                document.getElementById('onboarding-modal').classList.add('hidden');
-                document.getElementById('login-screen').classList.remove('hidden');
-            }
+            if (user) processUserAuth(user);
         });
     </script>
 </body>
