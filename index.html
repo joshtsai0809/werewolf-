@@ -134,7 +134,7 @@
                     <!-- Top Avatar Circle & ONLINE Badge -->
                     <div class="flex flex-col items-center mt-2 mb-6">
                         <div class="relative w-28 h-28 rounded-full border-2 border-gold-500/70 bg-[#080b12] flex items-center justify-center shadow-[0_0_25px_rgba(212,175,55,0.25)]">
-                            <div class="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-slate-900/80">
+                            <div id="login-avatar-container" class="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-slate-900/80">
                                 <i class="fa-solid fa-user-ninja text-4xl text-slate-600"></i>
                             </div>
                             <!-- ONLINE Badge -->
@@ -217,29 +217,40 @@
 
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1.5">選擇遊戲頭像</label>
-                            <div class="grid grid-cols-4 gap-2 pt-1">
+                            <div class="grid grid-cols-5 gap-2 pt-1">
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="reg-avatar" value="wolf" checked class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-red-500">
-                                        <i class="fa-solid fa-wolf-pack-battalion"></i>
+                                    <input type="radio" name="reg-avatar" value="google" checked class="peer hidden">
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-gold-400 flex flex-col items-center justify-center">
+                                        <i class="fa-brands fa-google text-base mb-1"></i>
+                                        <span class="text-[10px] font-bold">Google</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="reg-avatar" value="wolf" class="peer hidden">
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-red-500 flex flex-col items-center justify-center">
+                                        <i class="fa-solid fa-wolf-pack-battalion text-base mb-1"></i>
+                                        <span class="text-[10px]">狼人</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="reg-avatar" value="witch" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-purple-400">
-                                        <i class="fa-solid fa-hat-wizard"></i>
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-purple-400 flex flex-col items-center justify-center">
+                                        <i class="fa-solid fa-hat-wizard text-base mb-1"></i>
+                                        <span class="text-[10px]">女巫</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="reg-avatar" value="seer" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-blue-400">
-                                        <i class="fa-solid fa-eye"></i>
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-blue-400 flex flex-col items-center justify-center">
+                                        <i class="fa-solid fa-eye text-base mb-1"></i>
+                                        <span class="text-[10px]">預言家</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="reg-avatar" value="hunter" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-amber-500">
-                                        <i class="fa-solid fa-crosshairs"></i>
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-amber-500 flex flex-col items-center justify-center">
+                                        <i class="fa-solid fa-crosshairs text-base mb-1"></i>
+                                        <span class="text-[10px]">獵人</span>
                                     </div>
                                 </label>
                             </div>
@@ -298,7 +309,7 @@
                     <!-- User Mini Profile Bar -->
                     <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
                         <div class="flex items-center gap-3 overflow-hidden">
-                            <div id="user-avatar-icon" class="w-10 h-10 rounded-full border border-gold-500/50 bg-slate-800 flex items-center justify-center text-gold-300 text-lg shrink-0">
+                            <div id="user-avatar-icon" class="w-10 h-10 rounded-full border border-gold-500/50 bg-slate-800 flex items-center justify-center text-gold-300 text-lg shrink-0 overflow-hidden">
                                 <i class="fa-solid fa-user-ninja"></i>
                             </div>
                             <div class="truncate">
@@ -443,7 +454,7 @@
                     <section id="panel-settings" class="tab-panel space-y-6 hidden">
                         <div class="border-b border-slate-800 pb-4">
                             <h3 class="text-xl font-bold font-noto text-gold-300">個人與遊戲設定</h3>
-                            <p class="text-xs text-slate-400">查看個人 Firebase Profile 與音效選項</p>
+                            <p class="text-xs text-slate-400">查看個人 Firebase Profile 與頭像切換選項</p>
                         </div>
 
                         <div class="space-y-4 max-w-md">
@@ -462,6 +473,20 @@
                                         <span class="text-slate-400">出生年月日:</span>
                                         <span id="st-birthdate" class="text-slate-200">--</span>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <h4 class="text-xs font-bold text-gold-400 uppercase tracking-wider">頭像來源設定</h4>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <button onclick="updateAvatarPreference('google')" class="p-2.5 rounded-lg border border-slate-700 hover:border-gold-500 bg-slate-950/60 text-slate-200 font-semibold flex items-center justify-center gap-2">
+                                        <i class="fa-brands fa-google text-gold-400"></i>
+                                        <span>Google 頭像</span>
+                                    </button>
+                                    <button onclick="updateAvatarPreference('wolf')" class="p-2.5 rounded-lg border border-slate-700 hover:border-gold-500 bg-slate-950/60 text-slate-200 font-semibold flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-wolf-pack-battalion text-red-400"></i>
+                                        <span>角色頭像</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -536,6 +561,12 @@
 
         async function processUserAuth(user) {
             currentUser = user;
+            
+            // Render Google avatar on login screen if available
+            if (user.photoURL) {
+                document.getElementById('login-avatar-container').innerHTML = `<img src="${user.photoURL}" alt="User Avatar" class="w-full h-full object-cover">`;
+            }
+
             const userRef = ref(db, 'users/' + user.uid);
             
             try {
@@ -543,6 +574,8 @@
                 if (snapshot.exists() && snapshot.val().birthdate) {
                     // Returning User with complete profile
                     userProfile = snapshot.val();
+                    // Update photoURL if changed in Google
+                    userProfile.photoURL = user.photoURL || userProfile.photoURL;
                     showDashboard();
                     showToast(`歡迎回來，${userProfile.nickname}！`);
                 } else {
@@ -565,7 +598,7 @@
             e.preventDefault();
             const nickname = document.getElementById('reg-nickname').value.trim();
             const birthdate = document.getElementById('reg-birthdate').value;
-            const avatar = document.querySelector('input[name="reg-avatar"]:checked')?.value || 'wolf';
+            const avatar = document.querySelector('input[name="reg-avatar"]:checked')?.value || 'google';
 
             if (!nickname || !birthdate) {
                 showToast("請填寫完整的玩家資訊", "error");
@@ -578,6 +611,7 @@
                 nickname: nickname,
                 birthdate: birthdate,
                 avatar: avatar,
+                photoURL: currentUser ? currentUser.photoURL : null,
                 email: currentUser ? currentUser.email : 'user@gmail.com',
                 updatedAt: Date.now()
             };
@@ -598,23 +632,45 @@
             }
         };
 
-        window.handleSignOut = async function() {
-            try {
-                await signOut(auth);
-            } catch (e) { console.log(e); }
-            currentUser = null;
-            userProfile = null;
-            document.getElementById('main-dashboard').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-            showToast("已安全登出帳號");
+        window.updateAvatarPreference = async function(type) {
+            if (!userProfile) return;
+            userProfile.avatar = type;
+            if (currentUser) {
+                try {
+                    await set(ref(db, `users/${currentUser.uid}/avatar`), type);
+                } catch (e) { console.log(e); }
+            }
+            renderUserAvatar();
+            showToast("頭像風格已更新！");
         };
+
+        // Render User Avatar across components
+        function renderUserAvatar() {
+            const avatarEl = document.getElementById('user-avatar-icon');
+            if (!avatarEl || !userProfile) return;
+
+            const photoURL = userProfile.photoURL || (currentUser ? currentUser.photoURL : null);
+
+            if (userProfile.avatar === 'google' && photoURL) {
+                avatarEl.innerHTML = `<img src="${photoURL}" alt="Google Avatar" class="w-full h-full object-cover">`;
+            } else if (userProfile.avatar === 'witch') {
+                avatarEl.innerHTML = `<i class="fa-solid fa-hat-wizard text-purple-400"></i>`;
+            } else if (userProfile.avatar === 'seer') {
+                avatarEl.innerHTML = `<i class="fa-solid fa-eye text-blue-400"></i>`;
+            } else if (userProfile.avatar === 'hunter') {
+                avatarEl.innerHTML = `<i class="fa-solid fa-crosshairs text-amber-500"></i>`;
+            } else {
+                avatarEl.innerHTML = `<i class="fa-solid fa-wolf-pack-battalion text-red-500"></i>`;
+            }
+        }
 
         // Fallback for iFrame popup blocks
         function simulateFallbackUser() {
             currentUser = {
                 uid: "demo_google_user_99",
                 displayName: "月夜獵人",
-                email: "werewolf.player@gmail.com"
+                email: "werewolf.player@gmail.com",
+                photoURL: "https://lh3.googleusercontent.com/a/ACg8ocI8d4i-eN9K3h2_P4c?sz=96"
             };
             processUserAuth(currentUser);
         }
@@ -631,12 +687,7 @@
             document.getElementById('st-nickname').textContent = userProfile.nickname || "--";
             document.getElementById('st-birthdate').textContent = userProfile.birthdate || "--";
 
-            // Avatar Icon update
-            const avatarEl = document.getElementById('user-avatar-icon');
-            if (userProfile.avatar === 'witch') avatarEl.innerHTML = `<i class="fa-solid fa-hat-wizard text-purple-400"></i>`;
-            else if (userProfile.avatar === 'seer') avatarEl.innerHTML = `<i class="fa-solid fa-eye text-blue-400"></i>`;
-            else if (userProfile.avatar === 'hunter') avatarEl.innerHTML = `<i class="fa-solid fa-crosshairs text-amber-500"></i>`;
-            else avatarEl.innerHTML = `<i class="fa-solid fa-wolf-pack-battalion text-red-500"></i>`;
+            renderUserAvatar();
 
             switchTab('join-room');
             renderRoomList();
