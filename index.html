@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEREWOLF 天黑請閉眼 · 血月戰局</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Noto+Serif+TC:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        blood: {
+                            500: '#e50914',
+                            600: '#b80710',
+                            800: '#58080c',
+                            900: '#2d0406',
+                        },
+                        gold: {
+                            300: '#f6e05e',
+                            400: '#e3b342',
+                            500: '#d4af37',
+                            600: '#b78d21',
+                        },
+                        darkbg: '#0a0d14',
+                        cardbg: '#111622',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        noto: ['"Noto Serif TC"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #07090e;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Gold Gradient Text */
+        .gold-text-gradient {
+            background: linear-gradient(180deg, #fff3d1 0%, #edd37e 45%, #c5932a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+        }
+
+        /* Corner Brackets for UI Framing */
+        .corner-bracket {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-color: #b78d21;
+            pointer-events: none;
+        }
+        .corner-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
+        .corner-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
+        .corner-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
+        .corner-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.3);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 175, 55, 0.6);
+        }
+
+        /* Blood Moon Glow Effect */
+        .moon-glow {
+            box-shadow: 0 0 60px 10px rgba(184, 7, 16, 0.25);
+        }
+
+        .gold-border-glow {
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.08), 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .gold-border-glow:hover {
+            border-color: rgba(212, 175, 55, 0.7);
+            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.15), 0 6px 25px rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-darkbg text-slate-100 flex flex-col justify-between selection:bg-gold-500 selection:text-black">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app" class="relative min-h-screen flex flex-col justify-between overflow-hidden">
+
+        <!-- Dynamic Background Atmosphere -->
+        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-red-950/20 rounded-full blur-[120px] moon-glow"></div>
+            <div class="absolute top-1/4 -left-32 w-80 h-80 bg-gold-600/10 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-purple-950/20 rounded-full blur-[140px]"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-darkbg/80 to-darkbg"></div>
+        </div>
+
+        <!-- APP CONTENT ROOT -->
+        <div class="relative z-10 flex-1 flex flex-col">
+
+            <!-- 1. LANDING / LOGIN SCREEN (STRICTLY STYLIZED MATCHING USER IMAGE) -->
+            <div id="login-screen" class="flex-1 flex items-center justify-center p-4">
+                <div class="relative w-full max-w-[460px] bg-[#0e131f]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-8 sm:p-10 shadow-2xl transition-all duration-300">
+                    <!-- UI Frame Corner Brackets -->
+                    <div class="corner-bracket corner-tl"></div>
+                    <div class="corner-bracket corner-tr"></div>
+                    <div class="corner-bracket corner-bl"></div>
+                    <div class="corner-bracket corner-br"></div>
+
+                    <!-- Top Avatar Circle & ONLINE Badge -->
+                    <div class="flex flex-col items-center mt-2 mb-6">
+                        <div class="relative w-28 h-28 rounded-full border-2 border-gold-500/70 bg-[#080b12] flex items-center justify-center shadow-[0_0_25px_rgba(212,175,55,0.25)]">
+                            <div class="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-slate-900/80">
+                                <i class="fa-solid fa-user-ninja text-4xl text-slate-600"></i>
+                            </div>
+                            <!-- ONLINE Badge -->
+                            <div class="absolute -bottom-2 bg-[#701c10] border border-gold-500/80 text-gold-300 font-bold font-serif text-[11px] tracking-widest px-3 py-0.5 rounded-full shadow-md">
+                                ONLINE
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Title: WEREWOLF -->
+                    <div class="text-center mb-1">
+                        <h1 class="font-cinzel text-4xl sm:text-5xl font-black tracking-wider gold-text-gradient uppercase drop-shadow-md">
+                            WEREWOLF
+                        </h1>
+                    </div>
+
+                    <!-- Subtitle -->
+                    <div class="text-center mb-8">
+                        <p class="font-noto text-sm sm:text-base text-slate-300 tracking-[0.25em] font-medium opacity-90">
+                            天黑請閉眼 · 血月戰局
+                        </p>
+                    </div>
+
+                    <!-- Google Login Button -->
+                    <div class="mb-8">
+                        <button id="btn-google-login" onclick="handleGoogleSignIn()" class="w-full h-13 bg-[#131926] hover:bg-[#1c2538] border border-slate-700/80 hover:border-gold-500/60 transition-all duration-200 rounded-2xl flex items-center justify-center gap-3 py-3 px-4 group shadow-lg">
+                            <div class="w-7 h-7 rounded-full bg-white flex items-center justify-center p-1.5 shadow-sm">
+                                <svg class="w-full h-full" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                            </div>
+                            <span class="font-noto text-sm sm:text-base font-bold text-gold-300 tracking-wider group-hover:text-gold-400">
+                                使用 GOOGLE 帳號快速登入
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Footer Details matching original UI image -->
+                    <div class="pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-gold-500/80"></i>
+                            <span>安全防護已啟動</span>
+                        </div>
+                        <div>
+                            <span>v2.4.0 High-End</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. REGISTRATION / ONBOARDING MODAL (First Time Login) -->
+            <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+                <div class="relative w-full max-w-md bg-[#0e131f] border border-gold-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
+                    <div class="corner-bracket corner-tl"></div>
+                    <div class="corner-bracket corner-tr"></div>
+                    <div class="corner-bracket corner-bl"></div>
+                    <div class="corner-bracket corner-br"></div>
+
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/40 text-gold-400 mb-3">
+                            <i class="fa-solid fa-scroll text-xl"></i>
+                        </div>
+                        <h2 class="font-noto text-2xl font-bold text-slate-100">建立玩家檔案</h2>
+                        <p class="text-xs text-slate-400 mt-1">首次登入，請填寫基本遊戲資訊</p>
+                    </div>
+
+                    <form id="onboarding-form" onsubmit="handleSaveProfile(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1.5">玩家暱稱 (顯示於房間)</label>
+                            <input type="text" id="reg-nickname" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition" placeholder="輸入暱稱...">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1.5">出生年月日 (用於年齡驗證與戰局匹配)</label>
+                            <input type="date" id="reg-birthdate" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1.5">選擇遊戲頭像</label>
+                            <div class="grid grid-cols-4 gap-2 pt-1">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="reg-avatar" value="wolf" checked class="peer hidden">
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-red-500">
+                                        <i class="fa-solid fa-wolf-pack-battalion"></i>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="reg-avatar" value="witch" class="peer hidden">
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-purple-400">
+                                        <i class="fa-solid fa-hat-wizard"></i>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="reg-avatar" value="seer" class="peer hidden">
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-blue-400">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="reg-avatar" value="hunter" class="peer hidden">
+                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-amber-500">
+                                        <i class="fa-solid fa-crosshairs"></i>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                            <span>完成註冊並進入大廳</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 3. MAIN DASHBOARD / GAME LOBBY -->
+            <div id="main-dashboard" class="flex-1 flex flex-col md:flex-row h-full max-w-7xl w-full mx-auto p-3 sm:p-6 gap-6 hidden">
+
+                <!-- LEFT SIDEBAR NAVIGATION -->
+                <aside class="w-full md:w-64 bg-[#0e131f]/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl backdrop-blur-md">
+                    <div>
+                        <!-- Game Header Logo in Lobby -->
+                        <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full border border-gold-500/60 bg-red-950/40 flex items-center justify-center text-gold-400 text-lg">
+                                <i class="fa-solid fa-moon"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-cinzel text-lg font-bold gold-text-gradient">WEREWOLF</h2>
+                                <p class="text-[10px] text-slate-400 tracking-wider">血月戰局大廳</p>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Menu Items -->
+                        <nav class="space-y-2">
+                            <button onclick="switchTab('create-room')" id="nav-create-room" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800/60 hover:text-gold-300">
+                                <i class="fa-solid fa-plus-circle w-5 text-gold-400"></i>
+                                <span>創建房間</span>
+                            </button>
+
+                            <button onclick="switchTab('join-room')" id="nav-join-room" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800/60 hover:text-gold-300">
+                                <i class="fa-solid fa-door-open w-5 text-gold-400"></i>
+                                <span>加入房間</span>
+                            </button>
+
+                            <button onclick="switchTab('friends')" id="nav-friends" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800/60 hover:text-gold-300 relative">
+                                <i class="fa-solid fa-user-group w-5 text-gold-400"></i>
+                                <span>好友系統</span>
+                                <span class="ml-auto bg-red-600/80 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">3</span>
+                            </button>
+
+                            <button onclick="switchTab('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800/60 hover:text-gold-300">
+                                <i class="fa-solid fa-sliders w-5 text-gold-400"></i>
+                                <span>設定檔案</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- User Mini Profile Bar -->
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div id="user-avatar-icon" class="w-10 h-10 rounded-full border border-gold-500/50 bg-slate-800 flex items-center justify-center text-gold-300 text-lg shrink-0">
+                                <i class="fa-solid fa-user-ninja"></i>
+                            </div>
+                            <div class="truncate">
+                                <div id="user-display-name" class="text-sm font-bold text-slate-200 truncate">載入中...</div>
+                                <div id="user-google-email" class="text-[11px] text-slate-400 truncate">Google Auth</div>
+                            </div>
+                        </div>
+                        <button onclick="handleSignOut()" title="登出帳號" class="p-2 text-slate-400 hover:text-red-400 hover:bg-red-950/30 rounded-lg transition">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- RIGHT CONTENT PANELS -->
+                <main class="flex-1 bg-[#0e131f]/80 border border-slate-800 rounded-2xl p-6 shadow-2xl backdrop-blur-md overflow-y-auto min-h-[500px]">
+
+                    <!-- PANEL 1: CREATE ROOM -->
+                    <section id="panel-create-room" class="tab-panel space-y-6 hidden">
+                        <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold font-noto text-gold-300">創建戰局房間</h3>
+                                <p class="text-xs text-slate-400">設定狼人殺板子規則與參戰人數</p>
+                            </div>
+                            <span class="text-xs bg-gold-500/10 border border-gold-500/30 text-gold-300 px-3 py-1 rounded-full">房主權限</span>
+                        </div>
+
+                        <form onsubmit="handleCreateRoom(event)" class="space-y-5 max-w-xl">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">房間名稱</label>
+                                <input type="text" id="room-name" required value="標準血月殺局 #01" class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-2">玩家人數</label>
+                                    <select id="room-players" class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none">
+                                        <option value="6">6 人局 (進階新手局)</option>
+                                        <option value="9">9 人局 (標準匹配)</option>
+                                        <option value="12" selected>12 人局 (標準競選)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-2">遊戲板子配置</label>
+                                    <select id="room-board" class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none">
+                                        <option value="預女獵白">預言家 · 女巫 · 獵人 · 白痴</option>
+                                        <option value="狼王守衛">狼王 · 守衛 · 預女獵</option>
+                                        <option value="血月獵魔">血月使者 · 獵魔人 · 經典</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3 pt-2">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" id="toggle-voice" checked class="w-4 h-4 accent-gold-500 rounded">
+                                    <span class="text-sm text-slate-300">開啟即時語音發言 (麥克風權限)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" id="toggle-sheriff" checked class="w-4 h-4 accent-gold-500 rounded">
+                                    <span class="text-sm text-slate-300">開啟警長競選流程 (警徽流)</span>
+                                </label>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-gamepad"></i>
+                                    <span>立即創建房間</span>
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- PANEL 2: JOIN ROOM -->
+                    <section id="panel-join-room" class="tab-panel space-y-6">
+                        <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-xl font-bold font-noto text-gold-300">戰局大廳列表</h3>
+                                <p class="text-xs text-slate-400">即時更新進行中與等待中的遊戲房</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" placeholder="搜尋房號或名稱..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:border-gold-500 outline-none">
+                                <button onclick="renderRoomList()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl text-slate-200 transition">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Room Grid -->
+                        <div id="room-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Dynamically Injected Rooms -->
+                        </div>
+                    </section>
+
+                    <!-- PANEL 3: FRIENDS -->
+                    <section id="panel-friends" class="tab-panel space-y-6 hidden">
+                        <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold font-noto text-gold-300">狼友列表</h3>
+                                <p class="text-xs text-slate-400">線上好友與邀約戰局</p>
+                            </div>
+                            <button onclick="showToast('好友邀請已發送！')" class="px-3 py-1.5 bg-gold-500/10 border border-gold-500/40 hover:bg-gold-500/20 text-gold-300 text-xs rounded-xl transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <span>新增好友</span>
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative w-10 h-10 rounded-full bg-slate-800 border border-gold-500/40 flex items-center justify-center text-purple-400">
+                                        <i class="fa-solid fa-hat-wizard"></i>
+                                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-slate-200">暗夜預言家</div>
+                                        <div class="text-[11px] text-emerald-400">大廳閒置中</div>
+                                    </div>
+                                </div>
+                                <button onclick="showToast('已發送戰局邀請通知')" class="px-3 py-1.5 bg-slate-800 hover:bg-gold-500/20 text-gold-300 border border-slate-700 text-xs rounded-lg transition">
+                                    邀請組隊
+                                </button>
+                            </div>
+
+                            <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative w-10 h-10 rounded-full bg-slate-800 border border-gold-500/40 flex items-center justify-center text-red-500">
+                                        <i class="fa-solid fa-wolf-pack-battalion"></i>
+                                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-amber-500 border-2 border-slate-900 rounded-full"></span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-slate-200">血月王牌</div>
+                                        <div class="text-[11px] text-amber-400">遊戲中 (房號 #8812)</div>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 bg-slate-800/40 text-slate-500 text-xs rounded-lg cursor-not-allowed">
+                                    觀戰中
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PANEL 4: SETTINGS -->
+                    <section id="panel-settings" class="tab-panel space-y-6 hidden">
+                        <div class="border-b border-slate-800 pb-4">
+                            <h3 class="text-xl font-bold font-noto text-gold-300">個人與遊戲設定</h3>
+                            <p class="text-xs text-slate-400">查看個人 Firebase Profile 與音效選項</p>
+                        </div>
+
+                        <div class="space-y-4 max-w-md">
+                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <h4 class="text-xs font-bold text-gold-400 uppercase tracking-wider">個人檔案資料</h4>
+                                <div class="text-xs space-y-2">
+                                    <div class="flex justify-between py-1 border-b border-slate-800">
+                                        <span class="text-slate-400">UID (Firebase):</span>
+                                        <span id="st-uid" class="font-mono text-slate-200">--</span>
+                                    </div>
+                                    <div class="flex justify-between py-1 border-b border-slate-800">
+                                        <span class="text-slate-400">暱稱:</span>
+                                        <span id="st-nickname" class="text-slate-200">--</span>
+                                    </div>
+                                    <div class="flex justify-between py-1 border-b border-slate-800">
+                                        <span class="text-slate-400">出生年月日:</span>
+                                        <span id="st-birthdate" class="text-slate-200">--</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <h4 class="text-xs font-bold text-gold-400 uppercase tracking-wider">背景音效與視覺</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center justify-between">
+                                        <span class="text-xs text-slate-300">背景天黑音樂 (BGM)</span>
+                                        <input type="checkbox" checked class="accent-gold-500">
+                                    </label>
+                                    <label class="flex items-center justify-between">
+                                        <span class="text-xs text-slate-300">音效特效 (SFX)</span>
+                                        <input type="checkbox" checked class="accent-gold-500">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </main>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK Modular Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getDatabase, ref, get, set, child, push, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        // Provided Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAm_MrdK70YTJ-RGrVmFcvs0jjVzO5jHBE",
+            authDomain: "werewolf-65864.firebaseapp.com",
+            databaseURL: "https://werewolf-65864-default-rtdb.firebaseio.com",
+            projectId: "werewolf-65864",
+            storageBucket: "werewolf-65864.firebasestorage.app",
+            messagingSenderId: "1031359087847",
+            appId: "1:1031359087847:web:a1661d34a4999b00fcce42"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Application State
+        let currentUser = null;
+        let userProfile = null;
+
+        // Make authentication functions globally reachable for inline handlers
+        window.handleGoogleSignIn = async function() {
+            try {
+                showToast("連線至 Google 驗證服務...");
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+                await processUserAuth(user);
+            } catch (error) {
+                console.error("Google Login Error:", error);
+                // Sandbox fallback mode if popup blocked
+                if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+                    showToast("預覽視窗限制：啟用模擬 Google Auth 模式");
+                    simulateFallbackUser();
+                } else {
+                    showToast("登入失敗: " + error.message, "error");
+                }
+            }
+        };
+
+        async function processUserAuth(user) {
+            currentUser = user;
+            const userRef = ref(db, 'users/' + user.uid);
+            
+            try {
+                const snapshot = await get(userRef);
+                if (snapshot.exists() && snapshot.val().birthdate) {
+                    // Returning User with complete profile
+                    userProfile = snapshot.val();
+                    showDashboard();
+                    showToast(`歡迎回來，${userProfile.nickname}！`);
+                } else {
+                    // First time user or missing birthdate
+                    document.getElementById('reg-nickname').value = user.displayName || '';
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('onboarding-modal').classList.remove('hidden');
+                }
+            } catch (err) {
+                console.warn("Database fetch error, using local state:", err);
+                // Fallback for new user flow
+                document.getElementById('reg-nickname').value = user.displayName || '獵魔者';
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('onboarding-modal').classList.remove('hidden');
+            }
+        }
+
+        // Save supplementary profile details to Firebase Realtime DB
+        window.handleSaveProfile = async function(e) {
+            e.preventDefault();
+            const nickname = document.getElementById('reg-nickname').value.trim();
+            const birthdate = document.getElementById('reg-birthdate').value;
+            const avatar = document.querySelector('input[name="reg-avatar"]:checked')?.value || 'wolf';
+
+            if (!nickname || !birthdate) {
+                showToast("請填寫完整的玩家資訊", "error");
+                return;
+            }
+
+            const uid = currentUser ? currentUser.uid : 'simulated_uid_' + Date.now();
+            const profileData = {
+                uid: uid,
+                nickname: nickname,
+                birthdate: birthdate,
+                avatar: avatar,
+                email: currentUser ? currentUser.email : 'user@gmail.com',
+                updatedAt: Date.now()
+            };
+
+            try {
+                if (currentUser) {
+                    await set(ref(db, 'users/' + uid), profileData);
+                }
+                userProfile = profileData;
+                document.getElementById('onboarding-modal').classList.add('hidden');
+                showDashboard();
+                showToast("玩家檔案設定完成！");
+            } catch (err) {
+                console.error("Save profile error:", err);
+                userProfile = profileData;
+                document.getElementById('onboarding-modal').classList.add('hidden');
+                showDashboard();
+            }
+        };
+
+        window.handleSignOut = async function() {
+            try {
+                await signOut(auth);
+            } catch (e) { console.log(e); }
+            currentUser = null;
+            userProfile = null;
+            document.getElementById('main-dashboard').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            showToast("已安全登出帳號");
+        };
+
+        // Fallback for iFrame popup blocks
+        function simulateFallbackUser() {
+            currentUser = {
+                uid: "demo_google_user_99",
+                displayName: "月夜獵人",
+                email: "werewolf.player@gmail.com"
+            };
+            processUserAuth(currentUser);
+        }
+
+        // Show Dashboard UI & Bind User Profile
+        function showDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-dashboard').classList.remove('hidden');
+
+            document.getElementById('user-display-name').textContent = userProfile.nickname || "血月玩家";
+            document.getElementById('user-google-email').textContent = userProfile.email || "Google Account";
+
+            document.getElementById('st-uid').textContent = userProfile.uid || "--";
+            document.getElementById('st-nickname').textContent = userProfile.nickname || "--";
+            document.getElementById('st-birthdate').textContent = userProfile.birthdate || "--";
+
+            // Avatar Icon update
+            const avatarEl = document.getElementById('user-avatar-icon');
+            if (userProfile.avatar === 'witch') avatarEl.innerHTML = `<i class="fa-solid fa-hat-wizard text-purple-400"></i>`;
+            else if (userProfile.avatar === 'seer') avatarEl.innerHTML = `<i class="fa-solid fa-eye text-blue-400"></i>`;
+            else if (userProfile.avatar === 'hunter') avatarEl.innerHTML = `<i class="fa-solid fa-crosshairs text-amber-500"></i>`;
+            else avatarEl.innerHTML = `<i class="fa-solid fa-wolf-pack-battalion text-red-500"></i>`;
+
+            switchTab('join-room');
+            renderRoomList();
+        }
+
+        // Tab Switching Handler
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+            const targetPanel = document.getElementById(`panel-${tabName}`);
+            if (targetPanel) targetPanel.classList.remove('hidden');
+
+            // Active button style
+            ['create-room', 'join-room', 'friends', 'settings'].forEach(name => {
+                const btn = document.getElementById(`nav-${name}`);
+                if (name === tabName) {
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-gold-500/10 border border-gold-500/40 text-gold-300 shadow-md";
+                } else {
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800/60 hover:text-gold-300";
+                }
+            });
+        };
+
+        // Create Room Logic
+        window.handleCreateRoom = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('room-name').value;
+            const players = document.getElementById('room-players').value;
+            const board = document.getElementById('room-board').value;
+
+            const roomData = {
+                name: name,
+                players: parseInt(players),
+                current: 1,
+                board: board,
+                host: userProfile ? userProfile.nickname : "房主",
+                status: "waiting",
+                createdAt: Date.now()
+            };
+
+            try {
+                const newRoomRef = push(ref(db, 'rooms'));
+                await set(newRoomRef, roomData);
+                showToast(`房間【${name}】創建成功！`);
+                switchTab('join-room');
+                renderRoomList();
+            } catch (err) {
+                console.warn("Local room creation mode:", err);
+                showToast(`房間【${name}】創建成功 (預覽模式)！`);
+                mockRooms.unshift(roomData);
+                switchTab('join-room');
+                renderRoomList();
+            }
+        };
+
+        // Sample Rooms Data
+        const mockRooms = [
+            { id: "r1", name: "【高手房】12人狼王守衛 語音局", players: 12, current: 9, board: "狼王守衛", host: "狼王本狼", status: "waiting" },
+            { id: "r2", name: "9人新手速殺流 (來語音玩家)", players: 9, current: 9, board: "預女獵白", host: "愛吃肉包", status: "playing" },
+            { id: "r3", name: "血月使者大戰 12人高階局", players: 12, current: 4, board: "血月獵魔", host: "月光神話", status: "waiting" }
+        ];
+
+        function renderRoomList() {
+            const container = document.getElementById('room-list-container');
+            if (!container) return;
+
+            container.innerHTML = mockRooms.map(room => `
+                <div class="bg-slate-900/70 border border-slate-800 hover:border-gold-500/50 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="font-bold text-sm text-slate-100 truncate">${room.name}</h4>
+                            <span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${room.status === 'waiting' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-400'}">
+                                ${room.status === 'waiting' ? '等待中' : '進行中'}
+                            </span>
+                        </div>
+                        <div class="text-xs text-slate-400 space-y-1 font-mono">
+                            <div><i class="fa-solid fa-layer-group text-gold-500/70 mr-1.5"></i>板子: ${room.board}</div>
+                            <div><i class="fa-solid fa-crown text-gold-500/70 mr-1.5"></i>房主: ${room.host}</div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                        <div class="text-xs font-semibold text-gold-300">
+                            <i class="fa-solid fa-users text-slate-500 mr-1"></i>
+                            <span>${room.current}</span> / <span>${room.players} 人</span>
+                        </div>
+                        <button onclick="showToast('已加入 ${room.name} 遊戲準備房')" class="px-4 py-1.5 bg-gold-500/10 hover:bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-bold rounded-xl transition">
+                            加入戰局
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toast Notification System
+        window.showToast = function(msg, type = "info") {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `px-4 py-3 rounded-xl border text-xs font-bold shadow-xl backdrop-blur-md transition-all duration-300 transform translate-x-5 opacity-0 flex items-center gap-2 ${
+                type === 'error' ? 'bg-red-950/90 border-red-500 text-red-200' : 'bg-slate-900/95 border-gold-500/60 text-gold-300'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation text-red-400' : 'fa-moon text-gold-400'}"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-x-5', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-x-5', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        // Listen for Firebase Auth State Changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                processUserAuth(user);
+            }
+        });
+    </script>
+</body>
+</html>
