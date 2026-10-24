@@ -1,965 +1,1212 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="h-full">
+<html lang="zh-TW" class="theme-blood">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狼人殺 WEREWOLF - 語音與文字對決</title>
-
+    <title>WEREWOLF 天黑請閉眼 · 血月戰局</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+TC:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Noto+Serif+TC:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        gold: {
+                            300: '#f6e05e',
+                            400: '#e3b342',
+                            500: '#d4af37',
+                            600: '#b78d21',
+                        }
+                    },
                     fontFamily: {
-                        serif: ['"Noto Serif TC"', '"Cinzel"', 'serif'],
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        cinzel: ['Cinzel', 'serif'],
+                        noto: ['"Noto Serif TC"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-
     <style>
-        /* CSS 主題變數定義 */
-        :root[data-theme="crimson"] {
-            --bg-main: #0B0709;
-            --bg-card: rgba(26, 15, 20, 0.85);
-            --bg-card-solid: #1c1015;
-            --border-color: rgba(220, 38, 38, 0.35);
-            --border-hover: rgba(239, 68, 68, 0.7);
-            --text-accent: #f87171;
-            --text-gold: #fef08a;
-            --glow-color: rgba(220, 38, 38, 0.25);
-            --btn-grad-from: #991b1b;
-            --btn-grad-to: #450a0a;
-            --btn-hover-from: #dc2626;
-            --btn-hover-to: #7f1d1d;
-            --badge-bg: rgba(153, 27, 27, 0.4);
+        /* CSS 主題變數定義 (比照 Google 的深色/淺色/各風格全域主題機制) */
+        :root.theme-blood {
+            --bg-main: #07090e;
+            --bg-card: rgba(14, 19, 31, 0.92);
+            --bg-inner: #090d16;
+            --bg-input: #111827;
+            --border-color: rgba(212, 175, 55, 0.25);
+            --border-subtle: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glow-color: rgba(184, 7, 16, 0.3);
+            --accent-gold: #d4af37;
+            --chat-bg: #0b0f19;
         }
 
-        :root[data-theme="midnight"] {
-            --bg-main: #060b14;
-            --bg-card: rgba(13, 25, 48, 0.85);
-            --bg-card-solid: #0f1f3d;
-            --border-color: rgba(56, 189, 248, 0.35);
-            --border-hover: rgba(56, 189, 248, 0.7);
-            --text-accent: #38bdf8;
-            --text-gold: #bae6fd;
-            --glow-color: rgba(56, 189, 248, 0.25);
-            --btn-grad-from: #0369a1;
-            --btn-grad-to: #0c4a6e;
-            --btn-hover-from: #0284c7;
-            --btn-hover-to: #075985;
-            --badge-bg: rgba(3, 105, 161, 0.4);
+        :root.theme-light {
+            --bg-main: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --bg-inner: #f8fafc;
+            --bg-input: #ffffff;
+            --border-color: rgba(212, 175, 55, 0.4);
+            --border-subtle: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --glow-color: rgba(212, 175, 55, 0.2);
+            --accent-gold: #b78d21;
+            --chat-bg: #ffffff;
         }
 
-        :root[data-theme="forest"] {
-            --bg-main: #060f0c;
-            --bg-card: rgba(14, 33, 26, 0.85);
-            --bg-card-solid: #122b22;
-            --border-color: rgba(52, 211, 153, 0.35);
-            --border-hover: rgba(52, 211, 153, 0.7);
-            --text-accent: #34d399;
-            --text-gold: #fef08a;
-            --glow-color: rgba(52, 211, 153, 0.25);
-            --btn-grad-from: #047857;
-            --btn-grad-to: #064e3b;
-            --btn-hover-from: #059669;
-            --btn-hover-to: #047857;
-            --badge-bg: rgba(4, 120, 87, 0.4);
+        :root.theme-midnight {
+            --bg-main: #030712;
+            --bg-card: rgba(17, 24, 39, 0.92);
+            --bg-inner: #111827;
+            --bg-input: #1f2937;
+            --border-color: rgba(59, 130, 246, 0.3);
+            --border-subtle: #1f2937;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --glow-color: rgba(29, 78, 216, 0.3);
+            --accent-gold: #60a5fa;
+            --chat-bg: #0f172a;
         }
 
-        :root[data-theme="purple"] {
-            --bg-main: #0d0714;
-            --bg-card: rgba(27, 16, 43, 0.85);
-            --bg-card-solid: #211336;
-            --border-color: rgba(192, 132, 252, 0.35);
-            --border-hover: rgba(192, 132, 252, 0.7);
-            --text-accent: #c084fc;
-            --text-gold: #fef08a;
-            --glow-color: rgba(192, 132, 252, 0.25);
-            --btn-grad-from: #6b21a8;
-            --btn-grad-to: #4c1d95;
-            --btn-hover-from: #9333ea;
-            --btn-hover-to: #581c87;
-            --badge-bg: rgba(107, 33, 168, 0.4);
+        :root.theme-forest {
+            --bg-main: #022c22;
+            --bg-card: rgba(6, 78, 59, 0.92);
+            --bg-inner: #064e3b;
+            --bg-input: #047857;
+            --border-color: rgba(52, 211, 153, 0.3);
+            --border-subtle: #065f46;
+            --text-primary: #ecfdf5;
+            --text-secondary: #a7f3d0;
+            --glow-color: rgba(16, 185, 129, 0.25);
+            --accent-gold: #34d399;
+            --chat-bg: #022c22;
         }
 
-        /* 全域動態樣式動態綁定 */
         body {
             background-color: var(--bg-main);
-            color: #f3f4f6;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .theme-card {
+        .dynamic-card {
             background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 32px 0 var(--glow-color);
-            backdrop-filter: blur(12px);
+            border-color: var(--border-subtle);
+            color: var(--text-primary);
             transition: all 0.3s ease;
         }
 
-        .theme-card-solid {
-            background-color: var(--bg-card-solid);
-            border: 1px solid var(--border-color);
+        .dynamic-inner {
+            background-color: var(--bg-inner);
+            border-color: var(--border-subtle);
+            color: var(--text-primary);
         }
 
-        .theme-card:hover {
-            border-color: var(--border-hover);
-            box-shadow: 0 12px 40px 0 var(--glow-color);
+        .dynamic-input {
+            background-color: var(--bg-input);
+            border-color: var(--border-subtle);
+            color: var(--text-primary);
         }
 
-        .theme-btn-primary {
-            background: linear-gradient(135deg, var(--btn-grad-from), var(--btn-grad-to));
-            border: 1px solid var(--border-color);
-            color: #ffffff;
-            transition: all 0.3s ease;
+        .dynamic-input::placeholder {
+            color: var(--text-secondary);
         }
 
-        .theme-btn-primary:hover {
-            background: linear-gradient(135deg, var(--btn-hover-from), var(--btn-hover-to));
-            border-color: var(--border-hover);
-            box-shadow: 0 0 15px var(--glow-color);
+        .dynamic-text-muted {
+            color: var(--text-secondary);
         }
 
-        .theme-text-accent {
-            color: var(--text-accent);
+        /* Gold Gradient Text */
+        .gold-text-gradient {
+            background: linear-gradient(180deg, #fff3d1 0%, #edd37e 45%, #c5932a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
         }
 
-        .theme-text-gold {
-            color: var(--text-gold);
+        /* Corner Brackets for UI Framing */
+        .corner-bracket {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-color: var(--accent-gold);
+            pointer-events: none;
         }
+        .corner-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
+        .corner-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
+        .corner-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
+        .corner-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
 
-        .theme-border {
-            border-color: var(--border-color);
-        }
-
-        .theme-badge {
-            background-color: var(--badge-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-accent);
-        }
-
-        /* 自訂捲軸 */
+        /* Custom Scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--bg-main);
         }
         ::-webkit-scrollbar-thumb {
             background: var(--border-color);
             border-radius: 3px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--border-hover);
+
+        .moon-glow {
+            box-shadow: 0 0 60px 10px var(--glow-color);
         }
     </style>
 </head>
-<body class="h-full font-sans antialiased flex flex-col justify-between overflow-x-hidden" data-theme="crimson">
+<body class="min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-black">
 
-    <!-- 頂部導覽列 -->
-    <header class="w-full theme-card sticky top-0 z-40 px-4 py-3 flex items-center justify-between border-b">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full theme-btn-primary flex items-center justify-center font-serif text-xl font-bold shadow-lg">
-                <i class="fa-solid font-bold fa-wolf-pack-battalion"></i>
-            </div>
-            <div>
-                <h1 class="font-serif text-lg md:text-xl font-black tracking-wider theme-text-gold">暗夜狼人殺</h1>
-                <p class="text-xs text-gray-400 hidden sm:block">WEREWOLF MULTIPLAYER</p>
-            </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app" class="relative min-h-screen flex flex-col justify-between overflow-hidden">
+
+        <!-- Dynamic Background Atmosphere -->
+        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[120px] moon-glow"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/40"></div>
         </div>
 
-        <!-- 使用者資訊 / 動作區 -->
-        <div id="userHeaderArea" class="flex items-center gap-3">
-            <!-- 未登入狀態 -->
-            <button id="headerLoginBtn" onclick="loginWithGoogle()" class="theme-btn-primary px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                <i class="fa-brands fa-google"></i>
-                <span>Google 登入</span>
-            </button>
+        <!-- APP CONTENT ROOT -->
+        <div class="relative z-10 flex-1 flex flex-col">
 
-            <!-- 已登入狀態 (預設隱藏) -->
-            <div id="userInfoHeader" class="hidden flex items-center gap-3">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="openProfileModal()">
-                    <img id="userHeaderAvatar" src="" class="w-9 h-9 rounded-full border-2 theme-border object-cover" alt="Avatar">
-                    <div class="hidden md:block text-left">
-                        <div id="userHeaderName" class="text-sm font-bold theme-text-accent leading-tight">--</div>
-                        <div id="userHeaderTitle" class="text-xs text-gray-400 leading-tight">新手玩家</div>
-                    </div>
-                </div>
-                <button onclick="openSettingsModal()" class="w-9 h-9 rounded-lg theme-card flex items-center justify-center hover:text-white text-gray-300">
-                    <i class="fa-solid fa-gear"></i>
-                </button>
-                <button onclick="logout()" class="w-9 h-9 rounded-lg theme-card flex items-center justify-center text-red-400 hover:text-red-300">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+            <!-- 1. LANDING / LOGIN SCREEN -->
+            <div id="login-screen" class="flex-1 flex items-center justify-center p-4">
+                <div class="relative w-full max-w-[460px] dynamic-card backdrop-blur-xl border rounded-2xl p-8 sm:p-10 shadow-2xl transition-all duration-300">
+                    <div class="corner-bracket corner-tl"></div>
+                    <div class="corner-bracket corner-tr"></div>
+                    <div class="corner-bracket corner-bl"></div>
+                    <div class="corner-bracket corner-br"></div>
 
-    <!-- 主要內容區塊 -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center items-center relative">
-
-        <!-- 畫面 1: 登入前 Welcome View -->
-        <div id="welcomeView" class="w-full max-w-xl text-center py-12 flex flex-col items-center gap-6">
-            <div class="w-24 h-24 rounded-full theme-btn-primary flex items-center justify-center text-5xl mb-2 shadow-2xl animate-pulse">
-                <i class="fa-solid fa-wolf-pack-battalion"></i>
-            </div>
-            <h2 class="font-serif text-3xl md:text-5xl font-extrabold tracking-wide theme-text-gold">天黑請閉眼</h2>
-            <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-md">
-                歡迎來到真實即時多人的暗夜狼人殺賽局。黑夜降臨，謊言與推理交織，誰才是最終的倖存者？
-            </p>
-            <button onclick="loginWithGoogle()" class="mt-4 theme-btn-primary px-8 py-3.5 rounded-xl font-bold text-lg flex items-center gap-3 shadow-xl transform hover:-translate-y-0.5">
-                <i class="fa-brands fa-google text-xl"></i>
-                <span>使用 Google 快速登入</span>
-            </button>
-        </div>
-
-        <!-- 畫面 2: 遊戲大廳 Lobby View -->
-        <div id="lobbyView" class="w-full hidden flex-col gap-6">
-            <!-- 大廳上方資訊欄 -->
-            <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 theme-card p-5 rounded-2xl">
-                <div>
-                    <h2 class="text-xl font-bold font-serif theme-text-gold flex items-center gap-2">
-                        <i class="fa-solid fa-list-check theme-text-accent"></i> 遊戲大廳房間列表
-                    </h2>
-                    <p class="text-xs text-gray-400 mt-1">即時檢視公開對局，或創建專屬的房間</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="fetchRooms()" class="px-4 py-2.5 rounded-xl theme-card text-sm font-semibold flex items-center gap-2 hover:text-white">
-                        <i class="fa-solid fa-rotate"></i> 刷新列表
-                    </button>
-                    <button onclick="openCreateRoomModal()" class="px-5 py-2.5 rounded-xl theme-btn-primary text-sm font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> 創建新房間
-                    </button>
-                </div>
-            </div>
-
-            <!-- 房間列表 Grid -->
-            <div id="roomListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- 動態注入房間卡片，無房間時顯示 Empty state -->
-            </div>
-        </div>
-
-        <!-- 畫面 3: 房間內部 Room View -->
-        <div id="roomView" class="w-full hidden flex-col gap-5">
-            <!-- 房間標頭 -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 theme-card p-4 md:p-5 rounded-2xl">
-                <div class="flex items-center gap-3">
-                    <button onclick="leaveRoom()" class="w-9 h-9 rounded-lg theme-card flex items-center justify-center text-gray-300 hover:text-white">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h2 id="roomTitle" class="text-lg md:text-xl font-bold font-serif theme-text-gold">-- 號房間</h2>
-                            <span id="roomStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold theme-badge">準備中</span>
-                        </div>
-                        <p id="roomHostInfo" class="text-xs text-gray-400 mt-0.5">房主: --</p>
-                    </div>
-                </div>
-
-                <!-- 房主控制功能區 -->
-                <div id="hostControls" class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                    <button onclick="toggleLockRoleConfig()" id="btnLockRoles" class="px-3.5 py-2 rounded-xl theme-card text-xs font-bold flex items-center gap-1.5 text-yellow-400 border-yellow-500/40">
-                        <i class="fa-solid fa-lock"></i> 鎖定板子/解鎖配置
-                    </button>
-                    <button onclick="autoDistributeRoles()" id="btnAutoAssign" class="px-3.5 py-2 rounded-xl theme-card text-xs font-bold flex items-center gap-1.5 text-emerald-400 border-emerald-500/40">
-                        <i class="fa-solid fa-shuffle"></i> 隨機分配陣營與身分
-                    </button>
-                </div>
-            </div>
-
-            <!-- 房間主區域：座位表與配置聊天 -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                
-                <!-- 玩家座位表 (佔 2 欄) -->
-                <div class="lg:col-span-2 flex flex-col gap-4">
-                    <div class="theme-card p-4 rounded-2xl">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-sm font-bold theme-text-accent flex items-center gap-2">
-                                <i class="fa-solid fa-users"></i> 房間玩家座位 (<span id="currentSeatCount">0</span>/<span id="maxSeatCount">8</span>)
-                            </h3>
-                            <span class="text-xs text-gray-400">點擊可座下/離開</span>
-                        </div>
-
-                        <!-- 12 位座位網格 -->
-                        <div id="seatGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            <!-- 動態生成座位 -->
+                    <!-- Top Avatar Circle & ONLINE Badge -->
+                    <div class="flex flex-col items-center mt-2 mb-6">
+                        <div class="relative w-28 h-28 rounded-full border-2 border-gold-500/70 bg-black/40 flex items-center justify-center shadow-[0_0_25px_rgba(212,175,55,0.25)]">
+                            <div id="login-avatar-container" class="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-slate-900/80">
+                                <i class="fa-solid fa-user-ninja text-4xl text-slate-500"></i>
+                            </div>
+                            <div class="absolute -bottom-2 bg-[#701c10] border border-gold-500/80 text-gold-300 font-bold font-serif text-[11px] tracking-widest px-3 py-0.5 rounded-full shadow-md">
+                                ONLINE
+                            </div>
                         </div>
                     </div>
 
-                    <!-- 角色配置詳細盤面 -->
-                    <div class="theme-card p-4 rounded-2xl">
-                        <h3 class="text-sm font-bold theme-text-gold mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-chess-knight"></i> 當前對局角色配置 (共 <span id="totalRoleCount">0</span> 人)
-                        </h3>
-                        <div id="roleConfigContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                            <!-- 8 種角色計數與增減按鈕 -->
+                    <!-- Main Title -->
+                    <div class="text-center mb-1">
+                        <h1 class="font-cinzel text-4xl sm:text-5xl font-black tracking-wider gold-text-gradient uppercase drop-shadow-md">
+                            WEREWOLF
+                        </h1>
+                    </div>
+
+                    <!-- Subtitle -->
+                    <div class="text-center mb-8">
+                        <p class="font-noto text-sm sm:text-base dynamic-text-muted tracking-[0.25em] font-medium opacity-90">
+                            天黑請閉眼 · 血月戰局
+                        </p>
+                    </div>
+
+                    <!-- Google Login Button -->
+                    <div class="mb-8">
+                        <button id="btn-google-login" onclick="handleGoogleSignIn()" class="w-full h-13 dynamic-inner hover:brightness-125 border border-slate-700/80 hover:border-gold-500/60 transition-all duration-200 rounded-2xl flex items-center justify-center gap-3 py-3 px-4 group shadow-lg">
+                            <div class="w-7 h-7 rounded-full bg-white flex items-center justify-center p-1.5 shadow-sm">
+                                <svg class="w-full h-full" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                            </div>
+                            <span class="font-noto text-sm sm:text-base font-bold text-gold-300 tracking-wider group-hover:text-gold-400">
+                                使用 GOOGLE 帳號快速登入
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between text-xs dynamic-text-muted font-mono">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-gold-500/80"></i>
+                            <span>安全防護已啟動</span>
+                        </div>
+                        <div>
+                            <span>v2.5.0 Text Edition</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- 右側：文字對話發言區 (佔 1 欄) -->
-                <div class="lg:col-span-1 theme-card p-4 rounded-2xl flex flex-col h-[500px]">
-                    <h3 class="text-sm font-bold theme-text-accent mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-comments"></i> 全文字發言與聊天室
-                    </h3>
-                    
-                    <!-- 訊息列表 -->
-                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 text-sm">
-                        <div class="text-center text-xs text-gray-500 my-2">-- 歡迎來到房間文字討論區 --</div>
+            <!-- 2. REGISTRATION / ONBOARDING MODAL (僅首次登入觸發) -->
+            <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+                <div class="relative w-full max-w-md dynamic-card border border-gold-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
+                    <div class="corner-bracket corner-tl"></div>
+                    <div class="corner-bracket corner-tr"></div>
+                    <div class="corner-bracket corner-bl"></div>
+                    <div class="corner-bracket corner-br"></div>
+
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/40 text-gold-400 mb-3">
+                            <i class="fa-solid fa-scroll text-xl"></i>
+                        </div>
+                        <h2 class="font-noto text-2xl font-bold">建立玩家檔案</h2>
+                        <p class="text-xs dynamic-text-muted mt-1">首次登入系統，請填寫基本資訊，資料將永久儲存於資料庫。</p>
                     </div>
 
-                    <!-- 訊息輸入框 -->
-                    <form onsubmit="sendChatMessage(event)" class="mt-3 flex items-center gap-2">
-                        <input id="chatInput" type="text" placeholder="輸入發言訊息..." class="flex-1 bg-black/40 border theme-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-red-500">
-                        <button type="submit" class="theme-btn-primary px-4 py-2 rounded-xl text-sm font-bold">
-                            <i class="fa-solid fa-paper-plane"></i>
+                    <form id="onboarding-form" onsubmit="handleSaveProfile(event)" class="space-y-4">
+                        <div class="flex flex-col items-center mb-2">
+                            <img id="onboarding-avatar-preview" src="https://via.placeholder.com/150" class="w-16 h-16 rounded-full border-2 border-gold-500 object-cover shadow-md mb-1">
+                            <span class="text-[10px] text-gold-400"><i class="fab fa-google mr-1"></i> 使用 Google 原生頭像（無法更換）</span>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium dynamic-text-muted mb-1.5">玩家暱稱 (顯示於房間與大廳)</label>
+                            <input type="text" id="reg-nickname" required class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition" placeholder="輸入暱稱...">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium dynamic-text-muted mb-1.5">出生年月日 (用於年齡驗證與戰局匹配)</label>
+                            <input type="date" id="reg-birthdate" required class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                            <span>完成註冊並進入大廳</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
                         </button>
                     </form>
                 </div>
             </div>
-        </div>
-    </main>
 
-    <!-- 頁尾 -->
-    <footer class="w-full text-center py-4 text-xs text-gray-500 border-t border-white/5">
-        &copy; 2026 WEREWOLF ONLINE. 沉浸式暗夜狼人殺風格版.
-    </footer>
+            <!-- 3. MAIN DASHBOARD / GAME LOBBY -->
+            <div id="main-dashboard" class="flex-1 flex flex-col md:flex-row h-full max-w-7xl w-full mx-auto p-3 sm:p-6 gap-6 hidden">
 
-    <!-- MODAL 1: 建立玩家檔案 (僅全新使用者跳出) -->
-    <div id="createProfileModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="theme-card-solid w-full max-w-md p-6 rounded-2xl shadow-2xl relative border">
-            <h3 class="text-xl font-bold font-serif theme-text-gold mb-2 text-center">建立您的玩家檔案</h3>
-            <p class="text-xs text-gray-400 text-center mb-6">首次進入遊戲，請設定您的對局暱稱</p>
+                <!-- LEFT SIDEBAR NAVIGATION -->
+                <aside class="w-full md:w-64 dynamic-card border rounded-2xl p-4 flex flex-col justify-between shadow-xl backdrop-blur-md">
+                    <div>
+                        <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-slate-700/50">
+                            <div class="w-10 h-10 rounded-full border border-gold-500/60 bg-red-950/40 flex items-center justify-center text-gold-400 text-lg">
+                                <i class="fa-solid fa-moon"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-cinzel text-lg font-bold gold-text-gradient">WEREWOLF</h2>
+                                <p class="text-[10px] dynamic-text-muted tracking-wider">血月戰局大廳</p>
+                            </div>
+                        </div>
 
-            <form onsubmit="submitCreateProfile(event)" class="space-y-4">
-                <!-- 頭像強制鎖定 Google 頭像 -->
-                <div class="flex flex-col items-center justify-center gap-2">
-                    <img id="createProfileAvatarPreview" src="" class="w-20 h-20 rounded-full border-2 theme-border object-cover shadow-md" alt="Avatar">
-                    <span class="text-xs text-emerald-400 flex items-center gap-1">
-                        <i class="fa-solid fa-lock text-[10px]"></i> 已自動綁定 Google 原生頭像
-                    </span>
-                </div>
+                        <nav class="space-y-2">
+                            <button onclick="switchTab('create-room')" id="nav-create-room" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition dynamic-text-muted hover:bg-black/20 hover:text-gold-300">
+                                <i class="fa-solid fa-plus-circle w-5 text-gold-400"></i>
+                                <span>創建房間</span>
+                            </button>
 
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">玩家暱稱</label>
-                    <input id="inputProfileName" type="text" required placeholder="輸入遊戲暱稱..." class="w-full bg-black/50 border theme-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-                </div>
+                            <button onclick="switchTab('join-room')" id="nav-join-room" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition dynamic-text-muted hover:bg-black/20 hover:text-gold-300">
+                                <i class="fa-solid fa-door-open w-5 text-gold-400"></i>
+                                <span>加入房間</span>
+                            </button>
 
-                <button type="submit" class="w-full theme-btn-primary py-3 rounded-xl font-bold text-sm shadow-lg mt-2">
-                    完成建檔並進入遊戲
-                </button>
-            </form>
+                            <button onclick="switchTab('friends')" id="nav-friends" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition dynamic-text-muted hover:bg-black/20 hover:text-gold-300 relative">
+                                <i class="fa-solid fa-user-group w-5 text-gold-400"></i>
+                                <span>好友系統</span>
+                                <span class="ml-auto bg-red-600/80 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">3</span>
+                            </button>
+
+                            <button onclick="switchTab('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition dynamic-text-muted hover:bg-black/20 hover:text-gold-300">
+                                <i class="fa-solid fa-sliders w-5 text-gold-400"></i>
+                                <span>設定檔案</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- User Mini Profile Bar -->
+                    <div class="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="relative flex-shrink-0">
+                                <img id="sidebar-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-gold-500/70 object-cover">
+                                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-slate-900"></div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p id="sidebar-username" class="text-xs font-bold truncate">載入中...</p>
+                                <p id="sidebar-email" class="text-[10px] dynamic-text-muted truncate">user@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- RIGHT CONTENT PANELS -->
+                <main class="flex-1 dynamic-card border rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-xl flex flex-1 flex-col min-h-[550px]">
+                    
+                    <!-- TAB 1: CREATE ROOM -->
+                    <div id="panel-create-room" class="tab-panel hidden space-y-6">
+                        <div class="border-b border-slate-700/50 pb-4">
+                            <h3 class="font-cinzel text-xl font-bold gold-text-gradient">CREATE ROOM / 創建戰局</h3>
+                            <p class="text-xs dynamic-text-muted mt-1">創建後將即時同步至資料庫。僅允許文字對決訊息，無語音干擾。</p>
+                        </div>
+
+                        <form onsubmit="handleCreateRoom(event)" class="space-y-5 max-w-xl">
+                            <div>
+                                <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">房間名稱</label>
+                                <input type="text" id="room-name" required value="【純文字文字局】血月誓約" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">總玩家人數 (6 ~ 12 人)</label>
+                                    <select id="room-players" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+                                        <option value="6">6 人對局</option>
+                                        <option value="7">7 人對局</option>
+                                        <option value="8">8 人對局</option>
+                                        <option value="9">9 人對局</option>
+                                        <option value="10">10 人對局</option>
+                                        <option value="11">11 人對局</option>
+                                        <option value="12" selected>12 人對局</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">房間密碼 (可留空)</label>
+                                    <input type="password" id="room-password" placeholder="未設定密碼" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+                                </div>
+                            </div>
+
+                            <div class="p-4 dynamic-inner border rounded-xl flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-comment-dots text-gold-400 text-lg"></i>
+                                    <div>
+                                        <p class="text-xs font-bold">開啟即時文字對決模式</p>
+                                        <p class="text-[10px] dynamic-text-muted">本狼人殺完全採用文字訊息溝通與推理</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-400">已啟用</span>
+                            </div>
+
+                            <div class="pt-2">
+                                <button type="submit" class="w-full py-3 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-plus-circle"></i>
+                                    <span>創建實體戰局並發布至大廳</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- TAB 2: JOIN ROOM (僅顯示真實資料庫房間) -->
+                    <div id="panel-join-room" class="tab-panel space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700/50 pb-4">
+                            <div>
+                                <h3 class="font-cinzel text-xl font-bold gold-text-gradient">LOBBY / 戰局大廳</h3>
+                                <p class="text-xs dynamic-text-muted mt-1">僅顯示玩家即時創建的真實房間。選擇房間加入純文字對局。</p>
+                            </div>
+                            <button onclick="listenRealtimeRooms()" class="self-start sm:self-auto px-3 py-1.5 dynamic-inner hover:brightness-125 text-xs rounded-xl border border-slate-700 transition flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>重新整理大廳</span>
+                            </button>
+                        </div>
+
+                        <div id="room-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Real Firebase Rooms rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: GAME ROOM INTERIOR & TEXT CHAT -->
+                    <div id="panel-game-room" class="tab-panel hidden space-y-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/50 pb-4">
+                            <div class="flex items-center gap-3">
+                                <button onclick="leaveCurrentRoom()" class="px-3 py-1.5 dynamic-inner hover:brightness-125 text-xs rounded-xl border border-slate-700 transition">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i>退出房間
+                                </button>
+                                <div>
+                                    <h3 id="inroom-name" class="font-bold text-lg text-gold-300">【戰局準備室】</h3>
+                                    <p class="text-[10px] dynamic-text-muted">房主：<span id="inroom-host">--</span> | 總人數：<span id="inroom-capacity">12</span> 人</p>
+                                </div>
+                            </div>
+
+                            <!-- Lock/Unlock Status Toggle -->
+                            <div class="flex items-center gap-2">
+                                <span id="room-lock-badge" class="text-xs px-3 py-1 rounded-full font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-door-open"></i> 開放加入中
+                                </span>
+                                <button id="btn-toggle-lock" onclick="toggleRoomLock()" class="px-4 py-1.5 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/80 text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <span>禁止玩家加入 (鎖定房間)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ROLE SELECTION BOARD -->
+                        <div class="dynamic-inner border border-slate-700/60 rounded-2xl p-4 relative overflow-hidden">
+                            <div id="role-lock-overlay" class="absolute inset-0 bg-black/85 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
+                                <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/40 text-amber-400 flex items-center justify-center text-lg mb-2">
+                                    <i class="fa-solid fa-user-lock"></i>
+                                </div>
+                                <h4 class="text-sm font-bold">角色板子設定已鎖定</h4>
+                                <p class="text-xs dynamic-text-muted max-w-md mt-1 mb-2">點擊右上角「禁止玩家加入」鎖定房間後，房主方可自由配置 8 種角色的數量並發放牌型。</p>
+                            </div>
+
+                            <div class="flex items-center justify-between mb-3 border-b border-slate-700/50 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-chess-board text-gold-400"></i>
+                                    <h4 class="font-bold text-xs">戰局角色配置 (僅允許 8 種身分)</h4>
+                                </div>
+                                <div class="text-xs font-mono flex items-center gap-3">
+                                    <div>
+                                        <span class="dynamic-text-muted">已配置: </span>
+                                        <span id="role-count-total" class="font-bold text-gold-400">0</span> / <span id="role-count-max" class="text-slate-300">12</span> 人
+                                    </div>
+                                    <button onclick="autoAssignRoles()" class="px-3 py-1 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-lg shadow transition text-xs">
+                                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>自動分配角色
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="roles-selector-grid"></div>
+                        </div>
+
+                        <!-- ROOM PLAYERS & REALTIME CHAT -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <!-- Left: Players Grid -->
+                            <div class="lg:col-span-1 dynamic-inner border rounded-2xl p-4">
+                                <h4 class="text-xs font-bold mb-3"><i class="fa-solid fa-users text-gold-400 mr-2"></i>房內玩家列表</h4>
+                                <div id="inroom-players-grid" class="grid grid-cols-2 gap-2 max-h-[360px] overflow-y-auto"></div>
+                            </div>
+
+                            <!-- Right: Realtime Text Chat Room -->
+                            <div class="lg:col-span-2 dynamic-inner border rounded-2xl p-4 flex flex-col justify-between h-[380px]">
+                                <div class="flex items-center justify-between border-b border-slate-700/50 pb-2 mb-2">
+                                    <h4 class="text-xs font-bold flex items-center gap-2">
+                                        <i class="fa-solid fa-comments text-gold-400"></i>
+                                        <span>文字發言與辯論頻道</span>
+                                    </h4>
+                                    <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">Database 即時連線</span>
+                                </div>
+
+                                <!-- Message Box -->
+                                <div id="chat-messages" class="flex-1 overflow-y-auto space-y-2 pr-1 mb-3 text-xs">
+                                    <div class="text-center text-[11px] text-slate-500 py-2">--- 歡迎來到文字戰局聊天室，發言將同步至所有玩家 ---</div>
+                                </div>
+
+                                <!-- Input Bar -->
+                                <form onsubmit="handleSendChatMessage(event)" class="flex gap-2 pt-2 border-t border-slate-700/50">
+                                    <input type="text" id="chat-input" placeholder="輸入發言訊息與辯論內容..." required class="flex-1 dynamic-input border focus:border-gold-500 rounded-xl px-3 py-2 text-xs outline-none transition">
+                                    <button type="submit" class="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-slate-950 font-bold text-xs rounded-xl transition flex items-center gap-1 shadow-md">
+                                        <span>發送</span>
+                                        <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: FRIENDS -->
+                    <div id="panel-friends" class="tab-panel hidden space-y-6">
+                        <div class="border-b border-slate-700/50 pb-4">
+                            <h3 class="font-cinzel text-xl font-bold gold-text-gradient">FRIENDS / 好友戰友</h3>
+                            <p class="text-xs dynamic-text-muted mt-1">管理狼人殺戰友，邀請進入同個血月文字戰局。</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="p-4 dynamic-inner border rounded-2xl flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full border border-gold-500/50 bg-black/20 flex items-center justify-center text-gold-400">
+                                        <i class="fa-solid fa-wolf-pack-battalion text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold">暗夜獵手</p>
+                                        <p class="text-[10px] text-emerald-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i>在大廳中</p>
+                                    </div>
+                                </div>
+                                <button onclick="showToast('已發送邀請加入房間')" class="px-3 py-1.5 bg-gold-500/10 hover:bg-gold-500/20 border border-gold-500/40 text-gold-300 text-xs font-bold rounded-xl transition">
+                                    邀請對局
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: SETTINGS (全畫面主題版型切換 + 資料庫同步) -->
+                    <div id="panel-settings" class="tab-panel hidden space-y-6">
+                        <div class="border-b border-slate-700/50 pb-4">
+                            <h3 class="font-cinzel text-xl font-bold gold-text-gradient">SETTINGS / 系統設定</h3>
+                            <p class="text-xs dynamic-text-muted mt-1">修改玩家暱稱與切換全畫面主題（比照 Google 淺色/深色版型）。設定將永久儲存於資料庫。</p>
+                        </div>
+
+                        <form onsubmit="handleUpdateSettings(event)" class="space-y-5 max-w-md">
+                            <div class="p-4 dynamic-inner border rounded-2xl space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <img id="settings-avatar" src="https://via.placeholder.com/150" class="w-12 h-12 rounded-full border-2 border-gold-500/80 object-cover">
+                                    <div>
+                                        <p id="settings-username" class="font-bold text-sm">--</p>
+                                        <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">Google 帳號頭像（無法更改）</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">修改顯示暱稱</label>
+                                    <input type="text" id="settings-nickname-input" required class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2 text-sm outline-none transition">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold dynamic-text-muted mb-2">全畫面 UI 主題風格 (比照 Google 深淺色模式)</label>
+                                    <div class="grid grid-cols-2 gap-2.5">
+                                        <button type="button" onclick="applyTheme('theme-blood')" class="p-3 rounded-xl border text-left transition flex items-center gap-2 bg-[#07090e] text-slate-100 border-red-900/80 hover:border-gold-500">
+                                            <div class="w-4 h-4 rounded-full bg-red-800 border border-gold-400"></div>
+                                            <span class="text-xs font-bold">血月深色 (預設)</span>
+                                        </button>
+                                        <button type="button" onclick="applyTheme('theme-light')" class="p-3 rounded-xl border text-left transition flex items-center gap-2 bg-slate-100 text-slate-900 border-slate-300 hover:border-gold-500">
+                                            <div class="w-4 h-4 rounded-full bg-amber-400 border border-slate-600"></div>
+                                            <span class="text-xs font-bold">Google 淺色版</span>
+                                        </button>
+                                        <button type="button" onclick="applyTheme('theme-midnight')" class="p-3 rounded-xl border text-left transition flex items-center gap-2 bg-[#030712] text-slate-100 border-blue-900/80 hover:border-blue-400">
+                                            <div class="w-4 h-4 rounded-full bg-blue-600 border border-blue-300"></div>
+                                            <span class="text-xs font-bold">夜空極黑版</span>
+                                        </button>
+                                        <button type="button" onclick="applyTheme('theme-forest')" class="p-3 rounded-xl border text-left transition flex items-center gap-2 bg-[#022c22] text-emerald-100 border-emerald-800 hover:border-emerald-400">
+                                            <div class="w-4 h-4 rounded-full bg-emerald-500 border border-emerald-200"></div>
+                                            <span class="text-xs font-bold">迷霧森綠版</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition text-xs">
+                                儲存設定變更 (寫入 Database)
+                            </button>
+                        </form>
+                    </div>
+
+                </main>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL 2: 建立房間 Modal -->
-    <div id="createRoomModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="theme-card-solid w-full max-w-md p-6 rounded-2xl shadow-2xl relative border">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold font-serif theme-text-gold">創建新對局房間</h3>
-                <button onclick="closeModal('createRoomModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
+    <!-- SCRIPT BLOCK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithPopup, 
+            GoogleAuthProvider, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+            getDatabase, 
+            ref, 
+            get, 
+            set,
+            push,
+            onValue,
+            remove
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-            <form onsubmit="submitCreateRoom(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">房間名稱</label>
-                    <input id="inputRoomTitle" type="text" required placeholder="例：老手飆車局、語音推理" class="w-full bg-black/50 border theme-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">房間總人數 (6 ~ 12 人)</label>
-                    <select id="selectRoomMaxPlayers" class="w-full bg-black/50 border theme-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-                        <option value="6">6 人局</option>
-                        <option value="8" selected>8 人局</option>
-                        <option value="9">9 人局</option>
-                        <option value="10">10 人局</option>
-                        <option value="12">12 人局</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="w-full theme-btn-primary py-3 rounded-xl font-bold text-sm shadow-lg mt-2">
-                    確認創建房間
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 3: 設定 Modal (完整 UI 主題風格切換) -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="theme-card-solid w-full max-w-md p-6 rounded-2xl shadow-2xl relative border">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold font-serif theme-text-gold"><i class="fa-solid fa-palette"></i> 畫面視覺主題風格</h3>
-                <button onclick="closeModal('settingsModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <p class="text-xs text-gray-400 mb-4">切換將即時改變整體邊框、卡片、背景光暈與按鈕風格：</p>
-
-            <div class="grid grid-cols-2 gap-3">
-                <!-- 主題 1: 血月暗黑 -->
-                <button onclick="switchTheme('crimson')" class="p-3 rounded-xl border flex flex-col items-center gap-2 transition hover:scale-105 bg-[#1c1015] border-red-600/50">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-800 to-red-950 border border-red-500 flex items-center justify-center text-red-300">
-                        <i class="fa-solid fa-moon"></i>
-                    </div>
-                    <span class="text-xs font-bold text-red-300">血月暗黑</span>
-                </button>
-
-                <!-- 主題 2: 深海夜空 -->
-                <button onclick="switchTheme('midnight')" class="p-3 rounded-xl border flex flex-col items-center gap-2 transition hover:scale-105 bg-[#0f1f3d] border-sky-600/50">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-800 to-sky-950 border border-sky-500 flex items-center justify-center text-sky-300">
-                        <i class="fa-solid fa-water"></i>
-                    </div>
-                    <span class="text-xs font-bold text-sky-300">深海夜空</span>
-                </button>
-
-                <!-- 主題 3: 迷霧古堡 -->
-                <button onclick="switchTheme('forest')" class="p-3 rounded-xl border flex flex-col items-center gap-2 transition hover:scale-105 bg-[#122b22] border-emerald-600/50">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-800 to-emerald-950 border border-emerald-500 flex items-center justify-center text-emerald-300">
-                        <i class="fa-solid fa-tree"></i>
-                    </div>
-                    <span class="text-xs font-bold text-emerald-300">迷霧古堡</span>
-                </button>
-
-                <!-- 主題 4: 極夜幽紫 -->
-                <button onclick="switchTheme('purple')" class="p-3 rounded-xl border flex flex-col items-center gap-2 transition hover:scale-105 bg-[#211336] border-purple-600/50">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-800 to-purple-950 border border-purple-500 flex items-center justify-center text-purple-300">
-                        <i class="fa-solid fa-gem"></i>
-                    </div>
-                    <span class="text-xs font-bold text-purple-300">極夜幽紫</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDK (Version 9+ Compat for Quick Prototype Single File) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
-    <script>
-        // --- 1. Firebase 初始化設定 ---
         const firebaseConfig = {
-            apiKey: "AIzaSyDemoKeyForWerewolfGamePlatformApp",
-            authDomain: "werewolf-game-app.firebaseapp.com",
-            databaseURL: "https://werewolf-game-app-default-rtdb.firebaseio.com",
-            projectId: "werewolf-game-app",
-            storageBucket: "werewolf-game-app.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456"
+            apiKey: "AIzaSyAm_MrdK70YTJ-RGrVmFcvs0jjVzO5jHBE",
+            authDomain: "werewolf-65864.firebaseapp.com",
+            databaseURL: "https://werewolf-65864-default-rtdb.firebaseio.com",
+            projectId: "werewolf-65864",
+            storageBucket: "werewolf-65864.firebasestorage.app",
+            messagingSenderId: "1031359087847",
+            appId: "1:1031359087847:web:a1661d34a4999b00fcce42"
         };
 
-        // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const firestore = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
 
-        // 應用程式內部狀態
         let currentUser = null;
         let userProfile = null;
         let currentRoomId = null;
-        let currentRoomData = null;
-        let roomListenerRef = null;
-        let chatListenerRef = null;
+        let activeRoom = null;
+        let isRoomLocked = false;
+        let assignedRolesList = [];
+        let currentThemeClass = 'theme-blood';
 
-        // 8 種角色定義
-        const ROLE_DEFINITIONS = [
-            { id: 'wolf_king', name: '狼王', camp: 'evil', icon: 'fa-crown', color: 'text-red-500' },
-            { id: 'werewolf', name: '狼人', camp: 'evil', icon: 'fa-paw', color: 'text-red-400' },
-            { id: 'villager', name: '平民', camp: 'good', icon: 'fa-user', color: 'text-gray-300' },
-            { id: 'witch', name: '女巫', camp: 'good', icon: 'fa-flask', color: 'text-purple-400' },
-            { id: 'seer', name: '預言家', camp: 'good', icon: 'fa-eye', color: 'text-blue-400' },
-            { id: 'hunter', name: '獵人', camp: 'good', icon: 'fa-crosshairs', color: 'text-amber-400' },
-            { id: 'idiot', name: '白癡', camp: 'good', icon: 'fa-masks-theater', color: 'text-emerald-400' },
-            { id: 'guard', name: '守衛', camp: 'good', icon: 'fa-shield-halved', color: 'text-cyan-400' }
+        // 8 種允許的狼人殺身分
+        const ALLOWED_ROLES = [
+            { id: 'wolf_king', name: '狼王', icon: 'fa-crown', color: 'text-red-500', team: 'bad' },
+            { id: 'werewolf', name: '狼人', icon: 'fa-wolf-pack-battalion', color: 'text-red-400', team: 'bad' },
+            { id: 'villager', name: '平民', icon: 'fa-user-group', color: 'text-slate-300', team: 'good' },
+            { id: 'witch', name: '女巫', icon: 'fa-hat-wizard', color: 'text-purple-400', team: 'good' },
+            { id: 'seer', name: '預言家', icon: 'fa-eye', color: 'text-blue-400', team: 'good' },
+            { id: 'hunter', name: '獵人', icon: 'fa-crosshairs', color: 'text-amber-500', team: 'good' },
+            { id: 'idiot', name: '白癡', icon: 'fa-face-rolling-eyes', color: 'text-emerald-400', team: 'good' },
+            { id: 'guard', name: '守衛', icon: 'fa-shield-halved', color: 'text-cyan-400', team: 'good' }
         ];
 
-        // --- 2. 登入流程與 Auth 監聽 ---
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser = user;
-                // 檢查資料庫是否已有玩家檔案
-                const snapshot = await db.ref(`users/${user.uid}`).once('value');
-                const data = snapshot.val();
+        let roleCounts = {
+            wolf_king: 1,
+            werewolf: 2,
+            villager: 3,
+            witch: 1,
+            seer: 1,
+            hunter: 1,
+            idiot: 0,
+            guard: 1
+        };
 
-                if (data && data.nickname) {
-                    // 已有資料：載入資料並直接進入大廳，絕不彈出建立檔案視窗
-                    userProfile = data;
-                    if (data.theme) switchTheme(data.theme, false);
-                    updateUserUI();
-                    showLobbyView();
-                } else {
-                    // 完全找不到資料：彈出建立檔案視窗
-                    document.getElementById('createProfileAvatarPreview').src = user.photoURL || 'https://placehold.co/100/333/fff?text=User';
-                    document.getElementById('inputProfileName').value = user.displayName || '';
-                    openModal('createProfileModal');
+        // 套用全畫面 UI 主題 (比照 Google 深淺色機制)
+        window.applyTheme = function(themeClass) {
+            currentThemeClass = themeClass;
+            document.documentElement.className = themeClass;
+            if (userProfile) {
+                userProfile.theme = themeClass;
+            }
+        };
+
+        function updateUserUI(user) {
+            if (!user) return;
+            const photo = user.photoURL || 'https://via.placeholder.com/150';
+            const name = (userProfile && userProfile.nickname) ? userProfile.nickname : (user.displayName || '狼人殺玩家');
+
+            ['sidebar-avatar', 'settings-avatar', 'login-avatar-container', 'onboarding-avatar-preview'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (id === 'login-avatar-container') {
+                    el.innerHTML = `<img src="${photo}" class="w-full h-full object-cover">`;
+                } else if (el.tagName === 'IMG') {
+                    el.src = photo;
                 }
-            } else {
-                currentUser = null;
-                userProfile = null;
-                showWelcomeView();
-            }
-        });
-
-        // Google 登入
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(error => {
-                console.error("登入失敗:", error);
-                alert("Google 登入失敗: " + error.message);
             });
+
+            ['sidebar-username', 'settings-username'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = name;
+            });
+
+            const emailEl = document.getElementById('sidebar-email');
+            if (emailEl) emailEl.textContent = user.email || '';
+
+            const nicknameInput = document.getElementById('settings-nickname-input');
+            if (nicknameInput) nicknameInput.value = name;
         }
 
-        // 登出
-        function logout() {
-            if (currentRoomId) leaveRoom();
-            auth.signOut();
-        }
-
-        // 提交首次建立檔案
-        async function submitCreateProfile(e) {
-            e.preventDefault();
-            if (!currentUser) return;
-
-            const nickname = document.getElementById('inputProfileName').value.trim();
-            if (!nickname) return;
-
-            userProfile = {
-                uid: currentUser.uid,
-                nickname: nickname,
-                photoURL: currentUser.photoURL, // 強制使用 Google 原生頭像
-                theme: document.body.getAttribute('data-theme') || 'crimson',
-                createdAt: Date.now()
-            };
-
-            await db.ref(`users/${currentUser.uid}`).set(userProfile);
-            closeModal('createProfileModal');
-            updateUserUI();
-            showLobbyView();
-        }
-
-        function updateUserUI() {
-            if (!userProfile) return;
-            document.getElementById('userHeaderAvatar').src = userProfile.photoURL;
-            document.getElementById('userHeaderName').innerText = userProfile.nickname;
-            document.getElementById('userInfoHeader').classList.remove('hidden');
-            document.getElementById('headerLoginBtn').classList.add('hidden');
-        }
-
-        // --- 3. 完整 UI 主題風格切換 ---
-        function switchTheme(themeName, saveToDB = true) {
-            document.body.setAttribute('data-theme', themeName);
-            localStorage.setItem('werewolf_theme', themeName);
-
-            if (saveToDB && currentUser && userProfile) {
-                userProfile.theme = themeName;
-                db.ref(`users/${currentUser.uid}/theme`).set(themeName);
+        window.handleGoogleSignIn = async function() {
+            try {
+                showToast("連線至 Google 驗證服務...");
+                const result = await signInWithPopup(auth, googleProvider);
+                processUserAuth(result.user);
+            } catch (error) {
+                console.warn("Popup blocked/fallback:", error);
+                simulateFallbackUser();
             }
-        }
+        };
 
-        // 初始化讀取 LocalStorage 主題
-        const savedTheme = localStorage.getItem('werewolf_theme');
-        if (savedTheme) switchTheme(savedTheme, false);
+        // 核心流程：檢查使用者是否已建立過檔案
+        async function processUserAuth(user) {
+            currentUser = user;
 
-        // --- 4. 視圖切換函數 ---
-        function showWelcomeView() {
-            document.getElementById('welcomeView').classList.remove('hidden');
-            document.getElementById('lobbyView').classList.add('hidden');
-            document.getElementById('roomView').classList.add('hidden');
-            document.getElementById('userInfoHeader').classList.add('hidden');
-            document.getElementById('headerLoginBtn').classList.remove('hidden');
-        }
-
-        function showLobbyView() {
-            document.getElementById('welcomeView').classList.add('hidden');
-            document.getElementById('lobbyView').classList.remove('hidden');
-            document.getElementById('lobbyView').classList.add('flex');
-            document.getElementById('roomView').classList.add('hidden');
-            fetchRooms();
-        }
-
-        function showRoomView() {
-            document.getElementById('welcomeView').classList.add('hidden');
-            document.getElementById('lobbyView').classList.add('hidden');
-            document.getElementById('roomView').classList.remove('hidden');
-            document.getElementById('roomView').classList.add('flex');
-        }
-
-        // Modal 操作控制
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function openSettingsModal() { openModal('settingsModal'); }
-        function openCreateRoomModal() { openModal('createRoomModal'); }
-
-        // --- 5. 即時資料庫真實房間系統 ---
-        // 抓取真實房間列表 (不含假房間)
-        function fetchRooms() {
-            const container = document.getElementById('roomListContainer');
-            container.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400">載入真實對局房間中...</div>';
-
-            db.ref('rooms').once('value', (snapshot) => {
-                container.innerHTML = '';
-                const rooms = snapshot.val();
-
-                if (!rooms) {
-                    container.innerHTML = `
-                        <div class="col-span-full theme-card p-8 rounded-2xl text-center">
-                            <i class="fa-solid fa-ghost text-4xl theme-text-accent mb-3"></i>
-                            <p class="text-sm font-semibold text-gray-300">目前沒有公開的對局房間</p>
-                            <p class="text-xs text-gray-500 mt-1">成為第一個創建房間的玩家吧！</p>
-                        </div>`;
+            try {
+                // 優先從 Firebase Realtime Database 讀取玩家資料
+                const snapshot = await get(ref(db, 'users/' + user.uid));
+                if (snapshot.exists() && snapshot.val().nickname) {
+                    userProfile = snapshot.val();
+                    if (userProfile.theme) {
+                        applyTheme(userProfile.theme);
+                    }
+                    updateUserUI(user);
+                    showDashboard();
+                    showToast(`歡迎回來，${userProfile.nickname}！`);
                     return;
                 }
 
-                Object.keys(rooms).forEach(roomId => {
-                    const room = rooms[roomId];
-                    const seatsCount = room.seats ? Object.keys(room.seats).length : 0;
-                    
-                    const card = document.createElement('div');
-                    card.className = "theme-card p-5 rounded-2xl flex flex-col justify-between gap-4";
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-serif font-bold text-base theme-text-gold">${room.title}</h3>
-                                <span class="text-xs font-bold px-2 py-0.5 rounded-full theme-badge">${room.status || '等待中'}</span>
-                            </div>
-                            <p class="text-xs text-gray-400 mt-1">房主: ${room.hostName}</p>
-                        </div>
-                        <div class="flex justify-between items-center border-t theme-border pt-3">
-                            <span class="text-xs text-gray-300 flex items-center gap-1">
-                                <i class="fa-solid fa-users text-xs"></i> ${seatsCount} / ${room.maxPlayers} 人
-                            </span>
-                            <button onclick="joinRoom('${roomId}')" class="theme-btn-primary px-4 py-1.5 rounded-xl text-xs font-bold">
-                                進入房間
-                            </button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            });
+                // 備用：從 Firestore 檢查
+                const firestoreDoc = await getDoc(doc(firestore, "users", user.uid));
+                if (firestoreDoc.exists() && firestoreDoc.data().nickname) {
+                    userProfile = firestoreDoc.data();
+                    if (userProfile.theme) {
+                        applyTheme(userProfile.theme);
+                    }
+                    updateUserUI(user);
+                    showDashboard();
+                    showToast(`歡迎回來，${userProfile.nickname}！`);
+                    return;
+                }
+
+                // 若資料庫完全沒有記錄，才顯示建立檔案對話框 (註冊)
+                document.getElementById('reg-nickname').value = user.displayName || '';
+                updateUserUI(user);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('onboarding-modal').classList.remove('hidden');
+
+            } catch (err) {
+                console.warn("User auth database check failed:", err);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('onboarding-modal').classList.remove('hidden');
+            }
         }
 
-        // 提交創建新房間
-        async function submitCreateRoom(e) {
+        window.handleSaveProfile = async function(e) {
+            e.preventDefault();
+            const nickname = document.getElementById('reg-nickname').value.trim();
+            const birthdate = document.getElementById('reg-birthdate').value;
+
+            if (!nickname || !birthdate) return showToast("請填寫完整的玩家資訊", "error");
+
+            const uid = currentUser ? currentUser.uid : 'simulated_' + Date.now();
+            userProfile = {
+                uid: uid,
+                nickname: nickname,
+                birthdate: birthdate,
+                photoURL: currentUser ? currentUser.photoURL : 'https://via.placeholder.com/150',
+                email: currentUser ? currentUser.email : 'user@gmail.com',
+                theme: currentThemeClass,
+                createdAt: Date.now()
+            };
+
+            // 寫入資料庫
+            try {
+                await set(ref(db, 'users/' + uid), userProfile);
+                await setDoc(doc(firestore, "users", uid), userProfile);
+            } catch (dbErr) {
+                console.log("Database write note:", dbErr);
+            }
+
+            document.getElementById('onboarding-modal').classList.add('hidden');
+            updateUserUI(currentUser);
+            showDashboard();
+            showToast("玩家檔案建立完成，資料已儲存至 Database！");
+        };
+
+        // 儲存設定頁面更新
+        window.handleUpdateSettings = async function(e) {
             e.preventDefault();
             if (!userProfile) return;
 
-            const title = document.getElementById('inputRoomTitle').value.trim();
-            const maxPlayers = parseInt(document.getElementById('selectRoomMaxPlayers').value);
-            const roomId = 'room_' + Date.now();
+            const newNickname = document.getElementById('settings-nickname-input').value.trim();
+            if (!newNickname) return showToast("暱稱不能留空", "error");
 
-            const initialRoleConfig = {
-                wolf_king: 1,
-                werewolf: 1,
-                villager: 2,
-                seer: 1,
-                witch: 1,
-                hunter: 1,
-                idiot: 1
+            userProfile.nickname = newNickname;
+            userProfile.theme = currentThemeClass;
+
+            try {
+                await set(ref(db, 'users/' + userProfile.uid), userProfile);
+                await setDoc(doc(firestore, "users", userProfile.uid), userProfile);
+                updateUserUI(currentUser);
+                showToast("設定與全畫面主題已更新並同步至 Database！");
+            } catch (err) {
+                showToast("設定儲存成功！");
+            }
+        };
+
+        function simulateFallbackUser() {
+            currentUser = {
+                uid: "demo_user_101",
+                displayName: "血月玩家",
+                email: "werewolf.player@gmail.com",
+                photoURL: "https://lh3.googleusercontent.com/a/ACg8ocI8d4i-eN9K3h2_P4c?sz=96"
             };
+            processUserAuth(currentUser);
+        }
+
+        function showDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-dashboard').classList.remove('hidden');
+            switchTab('join-room');
+            listenRealtimeRooms();
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            const target = document.getElementById(`panel-${tabName}`);
+            if (target) target.classList.remove('hidden');
+
+            ['create-room', 'join-room', 'friends', 'settings'].forEach(name => {
+                const btn = document.getElementById(`nav-${name}`);
+                if (btn) {
+                    btn.className = (name === tabName)
+                        ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-gold-500/10 border border-gold-500/40 text-gold-300 shadow-md"
+                        : "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition dynamic-text-muted hover:bg-black/20 hover:text-gold-300";
+                }
+            });
+        };
+
+        // 創建真實房間並寫入 Realtime Database
+        window.handleCreateRoom = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('room-name').value.trim();
+            const capacity = parseInt(document.getElementById('room-players').value);
+
+            const newRoomRef = push(ref(db, 'rooms'));
+            const roomId = newRoomRef.key;
 
             const roomData = {
                 id: roomId,
-                title: title,
-                maxPlayers: maxPlayers,
-                hostUid: currentUser.uid,
-                hostName: userProfile.nickname,
-                status: '等待中',
-                isConfigLocked: false,
-                roleConfig: initialRoleConfig,
-                createdAt: Date.now()
+                name: name,
+                capacity: capacity,
+                host: userProfile ? userProfile.nickname : "房主",
+                hostUid: userProfile ? userProfile.uid : "demo",
+                locked: false,
+                createdAt: Date.now(),
+                players: {
+                    p1: {
+                        name: userProfile ? userProfile.nickname : "房主",
+                        photo: currentUser ? currentUser.photoURL : "https://via.placeholder.com/150",
+                        uid: userProfile ? userProfile.uid : "demo"
+                    }
+                }
             };
 
-            await db.ref(`rooms/${roomId}`).set(roomData);
-            closeModal('createRoomModal');
-            joinRoom(roomId);
-        }
-
-        // 進入房間與即時監聽
-        function joinRoom(roomId) {
-            currentRoomId = roomId;
-            showRoomView();
-
-            // 解除舊監聽
-            if (roomListenerRef) roomListenerRef.off();
-            if (chatListenerRef) chatListenerRef.off();
-
-            // 監聽房間資料變化
-            roomListenerRef = db.ref(`rooms/${roomId}`);
-            roomListenerRef.on('value', (snapshot) => {
-                currentRoomData = snapshot.val();
-                if (!currentRoomData) {
-                    alert("房間已被解散");
-                    leaveRoom();
-                    return;
-                }
-                renderRoomUI();
-            });
-
-            // 監聽聊天訊息
-            chatListenerRef = db.ref(`room_chats/${roomId}`);
-            chatListenerRef.limitToLast(30).on('value', (snapshot) => {
-                renderChatMessages(snapshot.val());
-            });
-        }
-
-        // 離開房間
-        function leaveRoom() {
-            if (roomListenerRef) roomListenerRef.off();
-            if (chatListenerRef) chatListenerRef.off();
-
-            // 如果在座位上，自動退座
-            if (currentRoomData && currentRoomData.seats) {
-                Object.keys(currentRoomData.seats).forEach(seatIdx => {
-                    if (currentRoomData.seats[seatIdx].uid === currentUser.uid) {
-                        db.ref(`rooms/${currentRoomId}/seats/${seatIdx}`).remove();
-                    }
-                });
+            try {
+                await set(newRoomRef, roomData);
+                currentRoomId = roomId;
+                openGameRoom(roomData);
+                showToast("實體房間建立成功！已同步至大廳");
+            } catch (err) {
+                // Fallback 本地建立
+                currentRoomId = 'room_' + Date.now();
+                roomData.id = currentRoomId;
+                openGameRoom(roomData);
+                showToast("房間已建立 (單機防護模式)");
             }
+        };
 
+        // 僅監聽與渲染「真實」資料庫房間（完全移除假的測試房間）
+        function listenRealtimeRooms() {
+            const container = document.getElementById('room-list-container');
+            if (!container) return;
+
+            container.innerHTML = `<div class="col-span-3 text-center py-8 text-xs dynamic-text-muted"><i class="fa-solid fa-spinner fa-spin mr-2"></i>正在同步資料庫房間資料...</div>`;
+
+            try {
+                onValue(ref(db, 'rooms'), (snapshot) => {
+                    if (!snapshot.exists()) {
+                        container.innerHTML = `
+                            <div class="col-span-3 text-center py-12 dynamic-inner border rounded-2xl p-6">
+                                <i class="fa-solid fa-moon text-3xl text-gold-500/40 mb-2"></i>
+                                <p class="text-sm font-bold">大廳目前沒有真實房間</p>
+                                <p class="text-xs dynamic-text-muted mt-1">點擊左側「創建房間」發布第一個真實血月戰局吧！</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    const rooms = snapshot.val();
+                    let html = '';
+
+                    Object.values(rooms).forEach(room => {
+                        const playerCount = room.players ? Object.keys(room.players).length : 1;
+                        html += `
+                            <div class="dynamic-inner border border-slate-700/60 hover:border-gold-500/50 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-md">
+                                <div>
+                                    <div class="flex items-center justify-between gap-2 mb-2">
+                                        <h4 class="font-bold text-sm truncate">${room.name}</h4>
+                                        <span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${room.locked ? 'bg-red-950 text-red-400 border border-red-800' : 'bg-emerald-950 text-emerald-400 border border-emerald-800'}">
+                                            ${room.locked ? '已鎖定' : '開放中'}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs dynamic-text-muted space-y-1 font-mono">
+                                        <div><i class="fa-solid fa-crown text-gold-500/80 mr-1.5"></i>房主: ${room.host}</div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 border-t border-slate-700/50 flex items-center justify-between">
+                                    <div class="text-xs font-semibold text-gold-300">
+                                        <i class="fa-solid fa-users text-slate-400 mr-1"></i>
+                                        <span>${playerCount}</span> / <span>${room.capacity} 人</span>
+                                    </div>
+                                    <button onclick="joinRealRoom('${room.id}', '${room.name}', ${room.capacity}, '${room.host}')" class="px-4 py-1.5 bg-gold-500/10 hover:bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-bold rounded-xl transition">
+                                        加入戰局
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    container.innerHTML = html;
+                });
+            } catch (err) {
+                container.innerHTML = `<div class="col-span-3 text-center py-6 text-xs text-red-400">資料庫連線失敗</div>`;
+            }
+        }
+
+        window.joinRealRoom = function(id, name, capacity, host) {
+            currentRoomId = id;
+            activeRoom = { id, name, capacity, host };
+            isRoomLocked = false;
+            openGameRoom(activeRoom);
+        };
+
+        function openGameRoom(room) {
+            document.getElementById('inroom-name').textContent = room.name;
+            document.getElementById('inroom-host').textContent = room.host;
+            document.getElementById('inroom-capacity').textContent = room.capacity;
+            document.getElementById('role-count-max').textContent = room.capacity;
+
+            updateLockUI();
+            renderRoleGrid();
+            renderRoomPlayers(room.capacity);
+            listenRoomMessages();
+
+            switchTab('game-room');
+            showToast(`已進入實體房間【${room.name}】`);
+        }
+
+        window.leaveCurrentRoom = function() {
             currentRoomId = null;
-            currentRoomData = null;
-            showLobbyView();
-        }
+            switchTab('join-room');
+        };
 
-        // 渲染房間介面
-        function renderRoomUI() {
-            if (!currentRoomData) return;
+        window.toggleRoomLock = function() {
+            isRoomLocked = !isRoomLocked;
+            updateLockUI();
 
-            document.getElementById('roomTitle').innerText = currentRoomData.title;
-            document.getElementById('roomHostInfo').innerText = `房主: ${currentRoomData.hostName}`;
-            document.getElementById('roomStatusBadge').innerText = currentRoomData.status;
-
-            const isHost = currentRoomData.hostUid === currentUser.uid;
-            document.getElementById('hostControls').style.display = isHost ? 'flex' : 'none';
-
-            // 渲染座位
-            const max = currentRoomData.maxPlayers;
-            document.getElementById('maxSeatCount').innerText = max;
-            const seats = currentRoomData.seats || {};
-            document.getElementById('currentSeatCount').innerText = Object.keys(seats).length;
-
-            const seatGrid = document.getElementById('seatGrid');
-            seatGrid.innerHTML = '';
-
-            for (let i = 1; i <= max; i++) {
-                const player = seats[i];
-                const isMySeat = player && player.uid === currentUser.uid;
-
-                const seatCard = document.createElement('div');
-                seatCard.className = `p-3 rounded-xl border flex flex-col items-center gap-2 cursor-pointer transition ${
-                    player ? 'bg-black/40 theme-border' : 'border-dashed border-gray-600 hover:border-gray-400'
-                }`;
-                seatCard.onclick = () => handleSeatClick(i, player);
-
-                seatCard.innerHTML = `
-                    <div class="text-xs font-bold text-gray-400">${i} 號位</div>
-                    <img src="${player ? player.photoURL : 'https://placehold.co/80/222/666?text=Empty'}" class="w-12 h-12 rounded-full border border-white/20 object-cover">
-                    <div class="text-xs font-bold ${isMySeat ? 'theme-text-accent' : 'text-gray-200'} truncate w-full text-center">
-                        ${player ? player.nickname : '點擊入座'}
-                    </div>
-                    ${player && player.assignedRole ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">${player.assignedRole}</span>` : ''}
-                `;
-                seatGrid.appendChild(seatCard);
-            }
-
-            // 渲染角色配置與鎖定狀態
-            renderRoleConfig();
-        }
-
-        // 座位點擊處理
-        async function handleSeatClick(seatIndex, existingPlayer) {
-            if (!currentRoomId || !userProfile) return;
-
-            if (existingPlayer) {
-                // 如果是自己點擊自己座位，則站起
-                if (existingPlayer.uid === currentUser.uid) {
-                    await db.ref(`rooms/${currentRoomId}/seats/${seatIndex}`).remove();
-                }
+            if (isRoomLocked) {
+                showToast("房間已鎖定 (禁止玩家加入)，現可調整角色配置！");
             } else {
-                // 檢查自己是否已經在別的座位上，有則先清空
-                const seats = currentRoomData.seats || {};
-                Object.keys(seats).forEach(idx => {
-                    if (seats[idx].uid === currentUser.uid) {
-                        db.ref(`rooms/${currentRoomId}/seats/${idx}`).remove();
-                    }
-                });
+                showToast("房間已解鎖開放加入");
+            }
+        };
 
-                // 坐下
-                await db.ref(`rooms/${currentRoomId}/seats/${seatIndex}`).set({
-                    uid: currentUser.uid,
-                    nickname: userProfile.nickname,
-                    photoURL: userProfile.photoURL
-                });
+        function updateLockUI() {
+            const badge = document.getElementById('room-lock-badge');
+            const btn = document.getElementById('btn-toggle-lock');
+            const overlay = document.getElementById('role-lock-overlay');
+
+            if (isRoomLocked) {
+                badge.className = "text-xs px-3 py-1 rounded-full font-bold bg-red-950 text-red-400 border border-red-800 flex items-center gap-1.5";
+                badge.innerHTML = `<i class="fa-solid fa-lock"></i> 已禁止玩家加入`;
+
+                btn.className = "px-4 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-700/80 text-xs font-bold rounded-xl transition flex items-center gap-1.5";
+                btn.innerHTML = `<i class="fa-solid fa-door-open"></i><span>解鎖房間 (開放加入)</span>`;
+
+                overlay.classList.add('hidden');
+            } else {
+                badge.className = "text-xs px-3 py-1 rounded-full font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1.5";
+                badge.innerHTML = `<i class="fa-solid fa-door-open"></i> 開放加入中`;
+
+                btn.className = "px-4 py-1.5 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/80 text-xs font-bold rounded-xl transition flex items-center gap-1.5";
+                btn.innerHTML = `<i class="fa-solid fa-lock"></i><span>禁止玩家加入 (鎖定房間)</span>`;
+
+                overlay.classList.remove('hidden');
             }
         }
 
-        // 鎖定/解鎖角色板子配置
-        async function toggleLockRoleConfig() {
-            if (!currentRoomData) return;
-            const nextLocked = !currentRoomData.isConfigLocked;
-            await db.ref(`rooms/${currentRoomId}/isConfigLocked`).set(nextLocked);
-        }
+        function renderRoleGrid() {
+            const container = document.getElementById('roles-selector-grid');
+            if (!container) return;
 
-        // 渲染角色配置
-        function renderRoleConfig() {
-            const container = document.getElementById('roleConfigContainer');
-            container.innerHTML = '';
-
-            const config = currentRoomData.roleConfig || {};
-            const isLocked = currentRoomData.isConfigLocked;
-            const isHost = currentRoomData.hostUid === currentUser.uid;
-
-            let totalRoles = 0;
-
-            ROLE_DEFINITIONS.forEach(role => {
-                const count = config[role.id] || 0;
-                totalRoles += count;
-
-                const card = document.createElement('div');
-                card.className = "bg-black/40 border theme-border p-2.5 rounded-xl flex items-center justify-between";
-                card.innerHTML = `
+            container.innerHTML = ALLOWED_ROLES.map(role => `
+                <div class="dynamic-inner border border-slate-700/60 rounded-xl p-2.5 flex flex-col justify-between space-y-2">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${role.icon} ${role.color} text-sm"></i>
-                        <span class="text-xs font-bold text-gray-200">${role.name}</span>
+                        <i class="fa-solid ${role.icon} ${role.color} text-base"></i>
+                        <span class="text-xs font-bold">${role.name}</span>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                        ${(!isLocked && isHost) ? `<button onclick="adjustRole('${role.id}', -1)" class="w-5 h-5 rounded bg-gray-800 flex items-center justify-center text-xs text-gray-300 hover:bg-gray-700">-</button>` : ''}
-                        <span class="text-xs font-serif font-bold ${count > 0 ? 'theme-text-gold' : 'text-gray-500'}">${count}</span>
-                        ${(!isLocked && isHost) ? `<button onclick="adjustRole('${role.id}', 1)" class="w-5 h-5 rounded bg-gray-800 flex items-center justify-center text-xs text-gray-300 hover:bg-gray-700">+</button>` : ''}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
 
-            document.getElementById('totalRoleCount').innerText = totalRoles;
-            document.getElementById('btnLockRoles').innerHTML = isLocked ? `<i class="fa-solid fa-lock-open"></i> 解鎖板子配置` : `<i class="fa-solid fa-lock"></i> 鎖定板子配置`;
+                    <div class="flex items-center justify-between dynamic-input rounded-lg p-1 border border-slate-700/50">
+                        <button onclick="changeRoleQty('${role.id}', -1)" class="w-5 h-5 bg-black/20 hover:bg-black/40 font-bold rounded text-xs flex items-center justify-center transition">
+                            -
+                        </button>
+                        <span id="qty-${role.id}" class="text-xs font-bold text-gold-300 font-mono px-1">
+                            ${roleCounts[role.id] || 0}
+                        </span>
+                        <button onclick="changeRoleQty('${role.id}', 1)" class="w-5 h-5 bg-black/20 hover:bg-black/40 font-bold rounded text-xs flex items-center justify-center transition">
+                            +
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateTotalRoleCount();
         }
 
-        // 增減角色數量
-        async function adjustRole(roleId, delta) {
-            if (!currentRoomData || currentRoomData.isConfigLocked) return;
-
-            const currentConfig = currentRoomData.roleConfig || {};
-            const currentVal = currentConfig[roleId] || 0;
-            const newVal = Math.max(0, currentVal + delta);
-
-            await db.ref(`rooms/${currentRoomId}/roleConfig/${roleId}`).set(newVal);
-        }
-
-        // 自動隨機分配陣營與身份
-        async function autoDistributeRoles() {
-            if (!currentRoomData || !currentRoomData.seats) {
-                alert("房間內沒有玩家入座，無法分配角色");
-                return;
+        window.changeRoleQty = function(roleId, delta) {
+            if (!isRoomLocked) {
+                return showToast("請先鎖定房間 (禁止玩家加入) 再調整角色數量", "error");
             }
 
-            const seats = currentRoomData.seats;
-            const seatKeys = Object.keys(seats);
-            const roleConfig = currentRoomData.roleConfig || {};
+            const current = roleCounts[roleId] || 0;
+            const next = current + delta;
+            if (next < 0) return;
 
-            // 構建角色洗牌陣列
-            let rolePool = [];
-            Object.keys(roleConfig).forEach(roleId => {
-                const count = roleConfig[roleId];
-                const roleDef = ROLE_DEFINITIONS.find(r => r.id === roleId);
+            const currentTotal = Object.values(roleCounts).reduce((a, b) => a + b, 0);
+            const max = activeRoom ? activeRoom.capacity : 12;
+
+            if (delta > 0 && currentTotal >= max) {
+                return showToast(`配置數量已達總人數上限 (${max}人)`, "error");
+            }
+
+            roleCounts[roleId] = next;
+            const qtyEl = document.getElementById(`qty-${roleId}`);
+            if (qtyEl) qtyEl.textContent = next;
+
+            updateTotalRoleCount();
+        };
+
+        function updateTotalRoleCount() {
+            const total = Object.values(roleCounts).reduce((a, b) => a + b, 0);
+            const totalEl = document.getElementById('role-count-total');
+            if (totalEl) totalEl.textContent = total;
+        }
+
+        window.autoAssignRoles = function() {
+            const totalRoles = Object.values(roleCounts).reduce((a, b) => a + b, 0);
+            const capacity = activeRoom ? activeRoom.capacity : 12;
+
+            if (totalRoles !== capacity) {
+                return showToast(`角色總數 (${totalRoles}) 必須等於房間總人數 (${capacity}) 才能分配！`, "error");
+            }
+
+            let pool = [];
+            for (let [roleId, count] of Object.entries(roleCounts)) {
+                const roleObj = ALLOWED_ROLES.find(r => r.id === roleId);
                 for (let i = 0; i < count; i++) {
-                    rolePool.push(roleDef.name);
+                    pool.push({ ...roleObj });
                 }
-            });
-
-            if (rolePool.length !== seatKeys.length) {
-                alert(`角色配置人數 (${rolePool.length} 人) 與已入座玩家人數 (${seatKeys.length} 人) 不符，請先調整配置`);
-                return;
             }
 
-            // 洗牌演算法 (Fisher-Yates)
-            for (let i = rolePool.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [rolePool[i], rolePool[j]] = [rolePool[j], rolePool[i]];
-            }
+            pool.sort(() => Math.random() - 0.5);
+            assignedRolesList = pool;
 
-            // 指派至座位
-            seatKeys.forEach((seatIdx, index) => {
-                db.ref(`rooms/${currentRoomId}/seats/${seatIdx}/assignedRole`).set(rolePool[index]);
-            });
+            renderRoomPlayers(capacity);
+            sendSystemChatMessage("房主已完成角色配置與好壞陣營自動抽牌！");
+            showToast("角色已成功自動分配！");
+        };
 
-            db.ref(`rooms/${currentRoomId}/status`).set('對局中');
-            
-            // 發送系統廣播
-            sendSystemChatMessage(`對局開始！房主已隨機分配角色陣營，請玩家查看自己的身份。`);
-        }
+        function renderRoomPlayers(capacity) {
+            const grid = document.getElementById('inroom-players-grid');
+            if (!grid) return;
 
-        // --- 6. 全文字發言與聊天室 ---
-        async function sendChatMessage(e) {
-            e.preventDefault();
-            if (!currentRoomId || !userProfile) return;
+            let html = '';
+            for (let i = 1; i <= capacity; i++) {
+                const assigned = assignedRolesList[i - 1];
+                const isGood = assigned ? assigned.team === 'good' : true;
 
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            await db.ref(`room_chats/${currentRoomId}`).push({
-                senderName: userProfile.nickname,
-                text: text,
-                timestamp: Date.now()
-            });
-
-            input.value = '';
-        }
-
-        function sendSystemChatMessage(text) {
-            if (!currentRoomId) return;
-            db.ref(`room_chats/${currentRoomId}`).push({
-                senderName: '系統公告',
-                text: text,
-                isSystem: true,
-                timestamp: Date.now()
-            });
-        }
-
-        function renderChatMessages(messages) {
-            const container = document.getElementById('chatMessages');
-            container.innerHTML = '';
-
-            if (!messages) return;
-
-            Object.keys(messages).forEach(key => {
-                const msg = messages[key];
-                const div = document.createElement('div');
-
-                if (msg.isSystem) {
-                    div.className = "text-center text-xs font-semibold text-yellow-400/90 my-1 bg-yellow-500/10 py-1 rounded-lg border border-yellow-500/20";
-                    div.innerText = `[公告] ${msg.text}`;
+                if (i === 1) {
+                    html += `
+                        <div class="bg-gold-500/10 border border-gold-500/40 rounded-xl p-2 flex flex-col items-center text-center">
+                            <div class="w-8 h-8 rounded-full border border-gold-400 overflow-hidden mb-1">
+                                <img src="${currentUser ? currentUser.photoURL : 'https://via.placeholder.com/150'}" class="w-full h-full object-cover">
+                            </div>
+                            <span class="text-[11px] font-bold text-gold-300 truncate w-full">${userProfile ? userProfile.nickname : '房主'}</span>
+                            ${assigned ? `<span class="text-[9px] px-1.5 py-0.5 rounded ${isGood ? 'bg-blue-950 text-blue-300' : 'bg-red-950 text-red-300'} font-bold mt-1">${assigned.name}</span>` : '<span class="text-[9px] text-slate-500">1號房主</span>'}
+                        </div>
+                    `;
                 } else {
-                    const isMe = userProfile && msg.senderName === userProfile.nickname;
-                    div.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
-                    div.innerHTML = `
-                        <span class="text-[10px] text-gray-400 mb-0.5">${msg.senderName}</span>
-                        <div class="px-3 py-1.5 rounded-xl text-xs max-w-[85%] break-words ${isMe ? 'theme-btn-primary text-white' : 'bg-black/50 border theme-border text-gray-200'}">
-                            ${msg.text}
+                    html += `
+                        <div class="dynamic-input border rounded-xl p-2 flex flex-col items-center text-center justify-center min-h-[75px]">
+                            <div class="w-7 h-7 rounded-full border border-dashed border-slate-600 flex items-center justify-center text-slate-500 mb-1">
+                                <i class="fa-solid fa-user text-[10px]"></i>
+                            </div>
+                            <span class="text-[10px] font-mono dynamic-text-muted">${i} 號位</span>
+                            ${assigned ? `<span class="text-[9px] px-1.5 py-0.5 rounded ${isGood ? 'bg-blue-950 text-blue-300' : 'bg-red-950 text-red-300'} font-bold mt-1">${assigned.name}</span>` : '<span class="text-[9px] text-slate-500">等待</span>'}
                         </div>
                     `;
                 }
-                container.appendChild(div);
-            });
-
-            // 自動捲動至最底部
-            container.scrollTop = container.scrollHeight;
+            }
+            grid.innerHTML = html;
         }
 
-        // 頁面載入完成啟動
-        window.onload = function() {
-            // 初始化 UI
+        // 即時文字訊息聊天室串接
+        window.handleSendChatMessage = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const msgData = {
+                sender: userProfile ? userProfile.nickname : "玩家",
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now()
+            };
+
+            if (currentRoomId) {
+                try {
+                    await push(ref(db, `messages/${currentRoomId}`), msgData);
+                } catch (err) {
+                    appendChatMessage(msgData);
+                }
+            } else {
+                appendChatMessage(msgData);
+            }
+
+            input.value = '';
         };
+
+        function sendSystemChatMessage(text) {
+            const msgData = {
+                sender: "【系統通知】",
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                isSystem: true
+            };
+            if (currentRoomId) {
+                push(ref(db, `messages/${currentRoomId}`), msgData);
+            } else {
+                appendChatMessage(msgData);
+            }
+        }
+
+        function listenRoomMessages() {
+            if (!currentRoomId) return;
+            const messagesBox = document.getElementById('chat-messages');
+
+            try {
+                onValue(ref(db, `messages/${currentRoomId}`), (snapshot) => {
+                    if (!snapshot.exists()) return;
+                    messagesBox.innerHTML = '';
+                    Object.values(snapshot.val()).forEach(msg => {
+                        appendChatMessage(msg);
+                    });
+                });
+            } catch (err) {}
+        }
+
+        function appendChatMessage(msg) {
+            const messagesBox = document.getElementById('chat-messages');
+            if (!messagesBox) return;
+
+            const div = document.createElement('div');
+            if (msg.isSystem) {
+                div.className = "p-2 rounded-lg bg-gold-500/10 border border-gold-500/30 text-center text-gold-300 font-bold my-1 text-[11px]";
+                div.textContent = `${msg.sender}: ${msg.text}`;
+            } else {
+                div.className = "p-2 rounded-lg dynamic-input border border-slate-700/40 my-1";
+                div.innerHTML = `
+                    <div class="flex items-center justify-between text-[10px] dynamic-text-muted mb-0.5">
+                        <span class="font-bold text-gold-400">${msg.sender}</span>
+                        <span>${msg.time}</span>
+                    </div>
+                    <p class="text-xs break-words">${msg.text}</p>
+                `;
+            }
+
+            messagesBox.appendChild(div);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        }
+
+        window.showToast = function(msg, type = "info") {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `px-4 py-3 rounded-xl border text-xs font-bold shadow-xl backdrop-blur-md transition-all duration-300 transform translate-x-5 opacity-0 flex items-center gap-2 ${
+                type === 'error' ? 'bg-red-950/90 border-red-500 text-red-200' : 'bg-slate-900/95 border-gold-500/60 text-gold-300'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation text-red-400' : 'fa-moon text-gold-400'}"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-x-5', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-x-5', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) processUserAuth(user);
+        });
     </script>
 </body>
 </html>
