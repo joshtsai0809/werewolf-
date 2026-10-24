@@ -35,7 +35,7 @@
         }
     </script>
     <style>
-        /* CSS 主題變數定義 (比照 Google 的深色/淺色/各風格全域主題機制) */
+        /* CSS 主題變數定義 (Google 全域深色/淺色/多風格主題機制) */
         :root.theme-blood {
             --bg-main: #07090e;
             --bg-card: rgba(14, 19, 31, 0.92);
@@ -240,7 +240,7 @@
                             <span>安全防護已啟動</span>
                         </div>
                         <div>
-                            <span>v2.5.0 Text Edition</span>
+                            <span>v2.5.1 Text Edition</span>
                         </div>
                     </div>
                 </div>
@@ -531,7 +531,7 @@
                     <div id="panel-settings" class="tab-panel hidden space-y-6">
                         <div class="border-b border-slate-700/50 pb-4">
                             <h3 class="font-cinzel text-xl font-bold gold-text-gradient">SETTINGS / 系統設定</h3>
-                            <p class="text-xs dynamic-text-muted mt-1">修改玩家暱稱與切換全畫面主題（比照 Google 淺色/深色版型）。設定將永久儲存於資料庫。</p>
+                            <p class="text-xs dynamic-text-muted mt-1">修改玩家暱稱與切換全畫面主題（比照 Google 淺色/深色版型）。設定將永久儲存於資料庫與本地端。</p>
                         </div>
 
                         <form onsubmit="handleUpdateSettings(event)" class="space-y-5 max-w-md">
@@ -573,7 +573,7 @@
                             </div>
 
                             <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition text-xs">
-                                儲存設定變更 (寫入 Database)
+                                儲存設定變更 (寫入 Database 及本地端)
                             </button>
                         </form>
                     </div>
@@ -631,6 +631,7 @@
         let isRoomLocked = false;
         let assignedRolesList = [];
         let currentThemeClass = 'theme-blood';
+        let isProcessingAuth = false; // 防止重複執行處理
 
         // 8 種允許的狼人殺身分
         const ALLOWED_ROLES = [
@@ -692,25 +693,49 @@
         }
 
         window.handleGoogleSignIn = async function() {
+            if (isProcessingAuth) return;
             try {
                 showToast("連線至 Google 驗證服務...");
                 const result = await signInWithPopup(auth, googleProvider);
-                processUserAuth(result.user);
+                // Auth 狀態更新交由 onAuthStateChanged 監聽處理，不重複呼叫 processUserAuth
             } catch (error) {
                 console.warn("Popup blocked/fallback:", error);
                 simulateFallbackUser();
             }
         };
 
-        // 核心流程：檢查使用者是否已建立過檔案
+        // 核心流程：優先讀取本地快取 localStorage，確保建立過檔案的玩家 100% 直升主畫面大廳
         async function processUserAuth(user) {
+            if (!user) return;
             currentUser = user;
+            const storageKey = `werewolf_user_profile_${user.uid}`;
 
+            // 1. 優先判斷本地端 localStorage 快取
+            const cachedProfile = localStorage.getItem(storageKey);
+            if (cachedProfile) {
+                try {
+                    userProfile = JSON.parse(cachedProfile);
+                    if (userProfile.theme) {
+                        applyTheme(userProfile.theme);
+                    }
+                    updateUserUI(user);
+                    showDashboard();
+                    showToast(`歡迎回來，${userProfile.nickname}！`);
+                    
+                    // 背景靜默同步最新雲端資料
+                    syncCloudProfile(user.uid, storageKey);
+                    return;
+                } catch (e) {
+                    console.warn("Failed to parse cached profile:", e);
+                }
+            }
+
+            // 2. 本地無快取時，向 Firebase Realtime Database 與 Firestore 查詢
             try {
-                // 優先從 Firebase Realtime Database 讀取玩家資料
                 const snapshot = await get(ref(db, 'users/' + user.uid));
                 if (snapshot.exists() && snapshot.val().nickname) {
                     userProfile = snapshot.val();
+                    localStorage.setItem(storageKey, JSON.stringify(userProfile));
                     if (userProfile.theme) {
                         applyTheme(userProfile.theme);
                     }
@@ -724,6 +749,7 @@
                 const firestoreDoc = await getDoc(doc(firestore, "users", user.uid));
                 if (firestoreDoc.exists() && firestoreDoc.data().nickname) {
                     userProfile = firestoreDoc.data();
+                    localStorage.setItem(storageKey, JSON.stringify(userProfile));
                     if (userProfile.theme) {
                         applyTheme(userProfile.theme);
                     }
@@ -733,7 +759,7 @@
                     return;
                 }
 
-                // 若資料庫完全沒有記錄，才顯示建立檔案對話框 (註冊)
+                // 3. 確定資料庫完全沒有資料，才顯示首次建立檔案 Modal (註冊)
                 document.getElementById('reg-nickname').value = user.displayName || '';
                 updateUserUI(user);
                 document.getElementById('login-screen').classList.add('hidden');
@@ -741,8 +767,26 @@
 
             } catch (err) {
                 console.warn("User auth database check failed:", err);
+                // 若網路異常但無快取，仍停留在登入頁或引導填寫
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('onboarding-modal').classList.remove('hidden');
+            }
+        }
+
+        // 背景靜默同步雲端 Profile 資料
+        async function syncCloudProfile(uid, storageKey) {
+            try {
+                const snapshot = await get(ref(db, 'users/' + uid));
+                if (snapshot.exists() && snapshot.val().nickname) {
+                    userProfile = snapshot.val();
+                    localStorage.setItem(storageKey, JSON.stringify(userProfile));
+                    if (userProfile.theme) {
+                        applyTheme(userProfile.theme);
+                    }
+                    updateUserUI(currentUser);
+                }
+            } catch (e) {
+                console.log("Silent cloud sync failed, using cached data.", e);
             }
         }
 
@@ -764,7 +808,11 @@
                 createdAt: Date.now()
             };
 
-            // 寫入資料庫
+            // 寫入 localStorage 本地端快取 (防再次跳 Modal 的核心保障)
+            const storageKey = `werewolf_user_profile_${uid}`;
+            localStorage.setItem(storageKey, JSON.stringify(userProfile));
+
+            // 寫入遠端資料庫
             try {
                 await set(ref(db, 'users/' + uid), userProfile);
                 await setDoc(doc(firestore, "users", uid), userProfile);
@@ -775,10 +823,10 @@
             document.getElementById('onboarding-modal').classList.add('hidden');
             updateUserUI(currentUser);
             showDashboard();
-            showToast("玩家檔案建立完成，資料已儲存至 Database！");
+            showToast("玩家檔案建立完成，資料已儲存至 Database 與本地端！");
         };
 
-        // 儲存設定頁面更新
+        // 儲存設定頁面更新 (同步更新 localStorage 與 Database)
         window.handleUpdateSettings = async function(e) {
             e.preventDefault();
             if (!userProfile) return;
@@ -789,13 +837,18 @@
             userProfile.nickname = newNickname;
             userProfile.theme = currentThemeClass;
 
+            // 同步寫入 localStorage 本地快取
+            const storageKey = `werewolf_user_profile_${userProfile.uid}`;
+            localStorage.setItem(storageKey, JSON.stringify(userProfile));
+
             try {
                 await set(ref(db, 'users/' + userProfile.uid), userProfile);
                 await setDoc(doc(firestore, "users", userProfile.uid), userProfile);
                 updateUserUI(currentUser);
-                showToast("設定與全畫面主題已更新並同步至 Database！");
+                showToast("設定與全畫面主題已更新並同步！");
             } catch (err) {
-                showToast("設定儲存成功！");
+                updateUserUI(currentUser);
+                showToast("設定已儲存於本地端！");
             }
         };
 
@@ -811,6 +864,7 @@
 
         function showDashboard() {
             document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('onboarding-modal').classList.add('hidden');
             document.getElementById('main-dashboard').classList.remove('hidden');
             switchTab('join-room');
             listenRealtimeRooms();
@@ -871,7 +925,7 @@
             }
         };
 
-        // 僅監聽與渲染「真實」資料庫房間（完全移除假的測試房間）
+        // 僅監聽與渲染「真實」資料庫房間
         function listenRealtimeRooms() {
             const container = document.getElementById('room-list-container');
             if (!container) return;
@@ -1204,8 +1258,14 @@
             }, 3000);
         };
 
+        // Firebase Auth 狀態變更統一處理 entry point
         onAuthStateChanged(auth, (user) => {
-            if (user) processUserAuth(user);
+            if (user && !isProcessingAuth) {
+                isProcessingAuth = true;
+                processUserAuth(user).finally(() => {
+                    isProcessingAuth = false;
+                });
+            }
         });
     </script>
 </body>
