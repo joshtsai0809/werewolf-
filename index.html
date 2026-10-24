@@ -122,10 +122,9 @@
         <!-- APP CONTENT ROOT -->
         <div class="relative z-10 flex-1 flex flex-col">
 
-            <!-- 1. LANDING / LOGIN SCREEN (STRICTLY STYLIZED MATCHING USER IMAGE) -->
+            <!-- 1. LANDING / LOGIN SCREEN -->
             <div id="login-screen" class="flex-1 flex items-center justify-center p-4">
                 <div class="relative w-full max-w-[460px] bg-[#0e131f]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-8 sm:p-10 shadow-2xl transition-all duration-300">
-                    <!-- UI Frame Corner Brackets -->
                     <div class="corner-bracket corner-tl"></div>
                     <div class="corner-bracket corner-tr"></div>
                     <div class="corner-bracket corner-bl"></div>
@@ -137,14 +136,13 @@
                             <div id="login-avatar-container" class="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-slate-900/80">
                                 <i class="fa-solid fa-user-ninja text-4xl text-slate-600"></i>
                             </div>
-                            <!-- ONLINE Badge -->
                             <div class="absolute -bottom-2 bg-[#701c10] border border-gold-500/80 text-gold-300 font-bold font-serif text-[11px] tracking-widest px-3 py-0.5 rounded-full shadow-md">
                                 ONLINE
                             </div>
                         </div>
                     </div>
 
-                    <!-- Main Title: WEREWOLF -->
+                    <!-- Main Title -->
                     <div class="text-center mb-1">
                         <h1 class="font-cinzel text-4xl sm:text-5xl font-black tracking-wider gold-text-gradient uppercase drop-shadow-md">
                             WEREWOLF
@@ -175,7 +173,6 @@
                         </button>
                     </div>
 
-                    <!-- Footer Details matching original UI image -->
                     <div class="pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono">
                         <div class="flex items-center gap-1.5">
                             <i class="fa-solid fa-shield-halved text-gold-500/80"></i>
@@ -188,7 +185,7 @@
                 </div>
             </div>
 
-            <!-- 2. REGISTRATION / ONBOARDING MODAL (First Time Login) -->
+            <!-- 2. REGISTRATION / ONBOARDING MODAL (Google Avatar Only) -->
             <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
                 <div class="relative w-full max-w-md bg-[#0e131f] border border-gold-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
                     <div class="corner-bracket corner-tl"></div>
@@ -201,10 +198,15 @@
                             <i class="fa-solid fa-scroll text-xl"></i>
                         </div>
                         <h2 class="font-noto text-2xl font-bold text-slate-100">建立玩家檔案</h2>
-                        <p class="text-xs text-slate-400 mt-1">首次登入，請填寫基本遊戲資訊</p>
+                        <p class="text-xs text-slate-400 mt-1">首次登入，系統將自動同步您的 Google 帳號與頭像資料。</p>
                     </div>
 
                     <form id="onboarding-form" onsubmit="handleSaveProfile(event)" class="space-y-4">
+                        <div class="flex flex-col items-center mb-2">
+                            <img id="onboarding-avatar-preview" src="https://via.placeholder.com/150" class="w-16 h-16 rounded-full border-2 border-gold-500 object-cover shadow-md mb-1">
+                            <span class="text-[10px] text-gold-400"><i class="fab fa-google mr-1"></i> 使用 Google 原生頭像（無法更改）</span>
+                        </div>
+
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1.5">玩家暱稱 (顯示於房間)</label>
                             <input type="text" id="reg-nickname" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition" placeholder="輸入暱稱...">
@@ -213,47 +215,6 @@
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1.5">出生年月日 (用於年齡驗證與戰局匹配)</label>
                             <input type="date" id="reg-birthdate" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1.5">選擇遊戲頭像</label>
-                            <div class="grid grid-cols-5 gap-2 pt-1">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="reg-avatar" value="google" checked class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-gold-400 flex flex-col items-center justify-center">
-                                        <i class="fa-brands fa-google text-base mb-1"></i>
-                                        <span class="text-[10px] font-bold">Google</span>
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="reg-avatar" value="wolf" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-red-500 flex flex-col items-center justify-center">
-                                        <i class="fa-solid fa-wolf-pack-battalion text-base mb-1"></i>
-                                        <span class="text-[10px]">狼人</span>
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="reg-avatar" value="witch" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-purple-400 flex flex-col items-center justify-center">
-                                        <i class="fa-solid fa-hat-wizard text-base mb-1"></i>
-                                        <span class="text-[10px]">女巫</span>
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="reg-avatar" value="seer" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-blue-400 flex flex-col items-center justify-center">
-                                        <i class="fa-solid fa-eye text-base mb-1"></i>
-                                        <span class="text-[10px]">預言家</span>
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="reg-avatar" value="hunter" class="peer hidden">
-                                    <div class="p-2 border border-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-500/10 rounded-xl text-center text-xl text-amber-500 flex flex-col items-center justify-center">
-                                        <i class="fa-solid fa-crosshairs text-base mb-1"></i>
-                                        <span class="text-[10px]">獵人</span>
-                                    </div>
-                                </label>
-                            </div>
                         </div>
 
                         <button type="submit" class="w-full mt-4 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
@@ -270,7 +231,6 @@
                 <!-- LEFT SIDEBAR NAVIGATION -->
                 <aside class="w-full md:w-64 bg-[#0e131f]/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl backdrop-blur-md">
                     <div>
-                        <!-- Game Header Logo in Lobby -->
                         <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-slate-800/80">
                             <div class="w-10 h-10 rounded-full border border-gold-500/60 bg-red-950/40 flex items-center justify-center text-gold-400 text-lg">
                                 <i class="fa-solid fa-moon"></i>
@@ -281,7 +241,6 @@
                             </div>
                         </div>
 
-                        <!-- Sidebar Menu Items -->
                         <nav class="space-y-2">
                             <button onclick="switchTab('create-room')" id="nav-create-room" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800/60 hover:text-gold-300">
                                 <i class="fa-solid fa-plus-circle w-5 text-gold-400"></i>
@@ -322,13 +281,13 @@
                 </aside>
 
                 <!-- RIGHT CONTENT PANELS -->
-                <main class="flex-1 bg-[#0e131f]/90 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-xl flex flex-col min-h-[550px]">
+                <main class="flex-1 bg-[#0e131f]/90 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-xl flex flex-1 flex-col min-h-[550px]">
                     
                     <!-- TAB 1: CREATE ROOM -->
                     <div id="panel-create-room" class="tab-panel hidden space-y-6">
                         <div class="border-b border-slate-800/80 pb-4">
                             <h3 class="font-cinzel text-xl font-bold gold-text-gradient">CREATE ROOM / 創建戰局</h3>
-                            <p class="text-xs text-slate-400 mt-1">設定房間基本資訊。創建房間後需「鎖定房間(禁止加入)」方可配置角色板子與數量。</p>
+                            <p class="text-xs text-slate-400 mt-1">設定房間基本資訊（支援 6 ~ 12 人）。建立房間後需點擊「鎖定房間(禁止加入)」方可設定角色分配。</p>
                         </div>
 
                         <form onsubmit="handleCreateRoom(event)" class="space-y-5 max-w-xl">
@@ -339,11 +298,14 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">總玩家人數</label>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">總玩家人數 (支援 6 ~ 12 人)</label>
                                     <select id="room-players" class="w-full bg-slate-900/90 border border-slate-700/80 focus:border-gold-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition">
                                         <option value="6">6 人對局</option>
+                                        <option value="7">7 人對局</option>
+                                        <option value="8">8 人對局</option>
                                         <option value="9">9 人對局</option>
                                         <option value="10">10 人對局</option>
+                                        <option value="11">11 人對局</option>
                                         <option value="12" selected>12 人對局</option>
                                     </select>
                                 </div>
@@ -378,7 +340,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
                             <div>
                                 <h3 class="font-cinzel text-xl font-bold gold-text-gradient">LOBBY / 戰局大廳</h3>
-                                <p class="text-xs text-slate-400 mt-1">選擇房間加入對局，或進入測試戰局室體驗角色配置。</p>
+                                <p class="text-xs text-slate-400 mt-1">選擇房間加入對局，與其他玩家一同在資料庫中記錄戰況。</p>
                             </div>
                             <button onclick="renderRoomList()" class="self-start sm:self-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl border border-slate-700 transition flex items-center gap-2">
                                 <i class="fa-solid fa-rotate-right"></i>
@@ -387,11 +349,11 @@
                         </div>
 
                         <div id="room-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <!-- Dynamically rendered rooms -->
+                            <!-- Dynamic Rooms -->
                         </div>
                     </div>
 
-                    <!-- TAB 3: GAME ROOM INTERIOR & ROLE CONFIG (Lock -> Configure Roles) -->
+                    <!-- TAB 3: GAME ROOM INTERIOR & ROLE CONFIG -->
                     <div id="panel-game-room" class="tab-panel hidden space-y-6">
                         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
                             <div class="flex items-center gap-3">
@@ -418,38 +380,38 @@
 
                         <!-- ROLE SELECTION BOARD (Only active when locked) -->
                         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
-                            <!-- Overlay notice when unlocked -->
                             <div id="role-lock-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
                                 <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/40 text-amber-400 flex items-center justify-center text-xl mb-3">
                                     <i class="fa-solid fa-user-lock"></i>
                                 </div>
                                 <h4 class="text-base font-bold text-slate-200">角色板子設定已鎖定</h4>
-                                <p class="text-xs text-slate-400 max-w-md mt-1 mb-4">需點擊右上角「禁止玩家加入」鎖定房間後，房主方可自由選擇與配置 8 種角色的數量。</p>
+                                <p class="text-xs text-slate-400 max-w-md mt-1 mb-4">需點擊右上角「禁止玩家加入」鎖定房間後，房主方可自由調整 8 種角色的數量與分配。</p>
                             </div>
 
                             <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                                 <div class="flex items-center gap-2">
                                     <i class="fa-solid fa-chess-board text-gold-400"></i>
-                                    <h4 class="font-bold text-sm text-slate-200">戰局角色配置 (僅 8 種特定身分)</h4>
+                                    <h4 class="font-bold text-sm text-slate-200">戰局角色配置與自動分配</h4>
                                 </div>
-                                <div class="text-xs font-mono">
-                                    <span class="text-slate-400">已配置: </span>
-                                    <span id="role-count-total" class="font-bold text-gold-400">0</span> / <span id="role-count-max" class="text-slate-300">12</span> 人
+                                <div class="text-xs font-mono flex items-center gap-4">
+                                    <div>
+                                        <span class="text-slate-400">已配置: </span>
+                                        <span id="role-count-total" class="font-bold text-gold-400">0</span> / <span id="role-count-max" class="text-slate-300">12</span> 人
+                                    </div>
+                                    <button onclick="autoAssignRoles()" class="px-3 py-1 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 text-slate-950 font-bold rounded-lg shadow transition">
+                                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>自動分配角色
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- 8 Roles Grid -->
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="roles-selector-grid">
-                                <!-- Roles inserted dynamically: 狼王, 狼人, 平民, 女巫, 預言家, 獵人, 白癡, 守衛 -->
-                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="roles-selector-grid"></div>
                         </div>
 
                         <!-- Room Players List Simulation -->
                         <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
-                            <h4 class="text-xs font-bold text-slate-300 mb-3"><i class="fa-solid fa-users text-gold-400 mr-2"></i>房內玩家列表</h4>
-                            <div id="inroom-players-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                                <!-- Players inserted dynamically -->
-                            </div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-3"><i class="fa-solid fa-users text-gold-400 mr-2"></i>房內玩家列表與陣營分配</h4>
+                            <div id="inroom-players-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3"></div>
                         </div>
                     </div>
 
@@ -481,7 +443,7 @@
                     <div id="panel-settings" class="tab-panel hidden space-y-6">
                         <div class="border-b border-slate-800/80 pb-4">
                             <h3 class="font-cinzel text-xl font-bold gold-text-gradient">SETTINGS / 系統設定</h3>
-                            <p class="text-xs text-slate-400 mt-1">檢視個人帳號與 Google 聯動資訊。</p>
+                            <p class="text-xs text-slate-400 mt-1">檢視個人帳號與 Google 聯動頭像資訊。</p>
                         </div>
                         <div class="space-y-4 max-w-md">
                             <div class="p-4 bg-slate-900/80 border border-slate-800 rounded-2xl space-y-3">
@@ -489,7 +451,7 @@
                                     <img id="settings-avatar" src="https://via.placeholder.com/150" class="w-12 h-12 rounded-full border-2 border-gold-500/80 object-cover">
                                     <div>
                                         <p id="settings-username" class="font-bold text-slate-200 text-sm">--</p>
-                                        <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">Google 帳號已綁定</span>
+                                        <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">Google 帳號已綁定（頭像唯讀）</span>
                                     </div>
                                 </div>
                             </div>
@@ -497,40 +459,6 @@
                     </div>
 
                 </main>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Profile Modal -->
-    <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#0e131f] border border-gold-500/40 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
-            <button id="close-profile-modal" onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-gold-300 transition">
-                <i class="fas fa-times text-lg"></i>
-            </button>
-            <h3 class="text-xl font-bold text-gold-300 mb-6 text-center font-noto tracking-wide border-b border-slate-800 pb-3">個人資料與帳號</h3>
-
-            <div class="space-y-5">
-                <div class="flex flex-col items-center">
-                    <img id="modal-avatar" src="https://via.placeholder.com/150" alt="Google Profile Photo" class="w-20 h-20 rounded-full border-2 border-gold-500 object-cover shadow-lg">
-                    <span class="mt-2 text-[11px] bg-gold-500/10 text-gold-300 px-3 py-0.5 rounded-full border border-gold-500/30 flex items-center gap-1">
-                        <i class="fab fa-google text-[10px]"></i> 已綁定 Google 頭像
-                    </span>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">暱稱</label>
-                    <input type="text" id="profile-name-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-100 outline-none focus:border-gold-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Google 電子郵件</label>
-                    <input type="email" id="profile-email-input" disabled class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-500 cursor-not-allowed">
-                </div>
-
-                <button id="save-profile-btn" class="w-full py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition">
-                    儲存變更
-                </button>
             </div>
         </div>
     </div>
@@ -542,8 +470,7 @@
             getAuth, 
             signInWithPopup, 
             GoogleAuthProvider, 
-            onAuthStateChanged, 
-            updateProfile 
+            onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { 
             getFirestore, 
@@ -554,8 +481,7 @@
             getDatabase, 
             ref, 
             get, 
-            set, 
-            push 
+            set 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -578,23 +504,24 @@
         let userProfile = null;
         let activeRoom = null;
         let isRoomLocked = false;
+        let assignedRolesList = [];
 
-        // Strictly the 8 allowed roles
+        // 8 個允許的狼人殺身分
         const ALLOWED_ROLES = [
-            { id: 'wolf_king', name: '狼王', icon: 'fa-crown', color: 'text-red-500', defaultQty: 1 },
-            { id: 'werewolf', name: '狼人', icon: 'fa-wolf-pack-battalion', color: 'text-red-400', defaultQty: 3 },
-            { id: 'villager', name: '平民', icon: 'fa-user-group', color: 'text-slate-300', defaultQty: 4 },
-            { id: 'witch', name: '女巫', icon: 'fa-hat-wizard', color: 'text-purple-400', defaultQty: 1 },
-            { id: 'seer', name: '預言家', icon: 'fa-eye', color: 'text-blue-400', defaultQty: 1 },
-            { id: 'hunter', name: '獵人', icon: 'fa-crosshairs', color: 'text-amber-500', defaultQty: 1 },
-            { id: 'idiot', name: '白癡', icon: 'fa-face-rolling-eyes', color: 'text-emerald-400', defaultQty: 0 },
-            { id: 'guard', name: '守衛', icon: 'fa-shield-halved', color: 'text-cyan-400', defaultQty: 1 }
+            { id: 'wolf_king', name: '狼王', icon: 'fa-crown', color: 'text-red-500', team: 'bad' },
+            { id: 'werewolf', name: '狼人', icon: 'fa-wolf-pack-battalion', color: 'text-red-400', team: 'bad' },
+            { id: 'villager', name: '平民', icon: 'fa-user-group', color: 'text-slate-300', team: 'good' },
+            { id: 'witch', name: '女巫', icon: 'fa-hat-wizard', color: 'text-purple-400', team: 'good' },
+            { id: 'seer', name: '預言家', icon: 'fa-eye', color: 'text-blue-400', team: 'good' },
+            { id: 'hunter', name: '獵人', icon: 'fa-crosshairs', color: 'text-amber-500', team: 'good' },
+            { id: 'idiot', name: '白癡', icon: 'fa-face-rolling-eyes', color: 'text-emerald-400', team: 'good' },
+            { id: 'guard', name: '守衛', icon: 'fa-shield-halved', color: 'text-cyan-400', team: 'good' }
         ];
 
         let roleCounts = {
             wolf_king: 1,
-            werewolf: 3,
-            villager: 4,
+            werewolf: 2,
+            villager: 3,
             witch: 1,
             seer: 1,
             hunter: 1,
@@ -607,9 +534,14 @@
             const photo = user.photoURL || 'https://via.placeholder.com/150';
             const name = user.displayName || user.email?.split('@')[0] || '未知狼人';
 
-            ['sidebar-avatar', 'modal-avatar', 'settings-avatar'].forEach(id => {
+            ['sidebar-avatar', 'settings-avatar', 'login-avatar-container', 'onboarding-avatar-preview'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.src = photo;
+                if (!el) return;
+                if (id === 'login-avatar-container') {
+                    el.innerHTML = `<img src="${photo}" class="w-full h-full object-cover">`;
+                } else if (el.tagName === 'IMG') {
+                    el.src = photo;
+                }
             });
 
             ['sidebar-username', 'settings-username'].forEach(id => {
@@ -669,9 +601,17 @@
                 email: currentUser ? currentUser.email : 'user@gmail.com'
             };
 
+            // 儲存至資料庫
+            try {
+                await set(ref(db, 'users/' + uid), userProfile);
+                await setDoc(doc(firestore, "users", uid), userProfile);
+            } catch (dbErr) {
+                console.log("Database sync note:", dbErr);
+            }
+
             document.getElementById('onboarding-modal').classList.add('hidden');
             showDashboard();
-            showToast("玩家檔案設定完成！");
+            showToast("玩家檔案已成功儲存至 Database！");
         };
 
         function simulateFallbackUser() {
@@ -707,7 +647,6 @@
             });
         };
 
-        // CREATE ROOM -> Direct to Room Interior without pre-set board
         window.handleCreateRoom = function(e) {
             e.preventDefault();
             const name = document.getElementById('room-name').value;
@@ -721,6 +660,7 @@
             };
 
             isRoomLocked = false;
+            assignedRolesList = [];
             openGameRoom(activeRoom);
         };
 
@@ -738,15 +678,14 @@
             showToast(`已進入房間【${room.name}】`);
         }
 
-        // TOGGLE ROOM LOCK -> Enables Role Configuration Panel
         window.toggleRoomLock = function() {
             isRoomLocked = !isRoomLocked;
             updateLockUI();
 
             if (isRoomLocked) {
-                showToast("房間已鎖定 (禁止玩家加入)，現可調整 8 種角色配置與數量！");
+                showToast("房間已鎖定 (禁止其他玩家加入)，現可調整角色配置！");
             } else {
-                showToast("房間已解鎖開放加入");
+                showToast("房間已解鎖，開放其他玩家加入");
             }
         };
 
@@ -774,7 +713,6 @@
             }
         }
 
-        // RENDER 8 SPECIFIC ROLES WITH QUANTITY CONTROLS
         function renderRoleGrid() {
             const container = document.getElementById('roles-selector-grid');
             if (!container) return;
@@ -810,10 +748,8 @@
 
             const current = roleCounts[roleId] || 0;
             const next = current + delta;
-
             if (next < 0) return;
 
-            // Check max capacity
             const currentTotal = Object.values(roleCounts).reduce((a, b) => a + b, 0);
             const max = activeRoom ? activeRoom.capacity : 12;
 
@@ -834,12 +770,41 @@
             if (totalEl) totalEl.textContent = total;
         }
 
+        // 自動分配角色與陣營（好人/壞人）
+        window.autoAssignRoles = function() {
+            const totalRoles = Object.values(roleCounts).reduce((a, b) => a + b, 0);
+            const capacity = activeRoom ? activeRoom.capacity : 12;
+
+            if (totalRoles !== capacity) {
+                return showToast(`角色總數 (${totalRoles}) 必須等於房間總人數 (${capacity}) 才能分配！`, "error");
+            }
+
+            // 展開角色清單
+            let pool = [];
+            for (let [roleId, count] of Object.entries(roleCounts)) {
+                const roleObj = ALLOWED_ROLES.find(r => r.id === roleId);
+                for (let i = 0; i < count; i++) {
+                    pool.push({ ...roleObj });
+                }
+            }
+
+            // 隨機洗牌
+            pool.sort(() => Math.random() - 0.5);
+            assignedRolesList = pool;
+
+            renderRoomPlayers(capacity);
+            showToast("角色已成功自動分配！已劃分好人與壞人陣營。");
+        };
+
         function renderRoomPlayers(capacity) {
             const grid = document.getElementById('inroom-players-grid');
             if (!grid) return;
 
             let html = '';
             for (let i = 1; i <= capacity; i++) {
+                const assigned = assignedRolesList[i - 1];
+                const isGood = assigned ? assigned.team === 'good' : true;
+
                 if (i === 1) {
                     html += `
                         <div class="bg-gold-500/10 border border-gold-500/40 rounded-xl p-3 flex flex-col items-center text-center">
@@ -847,7 +812,8 @@
                                 <img src="${currentUser ? currentUser.photoURL : 'https://via.placeholder.com/150'}" class="w-full h-full object-cover">
                             </div>
                             <span class="text-[11px] font-bold text-gold-300 truncate w-full">${userProfile ? userProfile.nickname : '房主'}</span>
-                            <span class="text-[9px] text-amber-400"><i class="fa-solid fa-crown text-[8px] mr-0.5"></i>房主</span>
+                            <span class="text-[9px] text-amber-400 mb-1"><i class="fa-solid fa-crown text-[8px] mr-0.5"></i>房主</span>
+                            ${assigned ? `<span class="text-[10px] px-2 py-0.5 rounded ${isGood ? 'bg-blue-950 text-blue-300 border border-blue-800' : 'bg-red-950 text-red-300 border border-red-800'} font-bold mt-1">${assigned.name} (${isGood ? '好人' : '壞人'})</span>` : '<span class="text-[9px] text-slate-500">等待分配</span>'}
                         </div>
                     `;
                 } else {
@@ -856,8 +822,8 @@
                             <div class="w-8 h-8 rounded-full bg-slate-900 border border-dashed border-slate-700 flex items-center justify-center text-slate-600 mb-1">
                                 <i class="fa-solid fa-user text-xs"></i>
                             </div>
-                            <span class="text-[10px] text-slate-500 font-mono">${i} 號位置</span>
-                            <span class="text-[9px] text-slate-600">等待加入</span>
+                            <span class="text-[10px] text-slate-400 font-mono">${i} 號位置</span>
+                            ${assigned ? `<span class="text-[10px] px-2 py-0.5 rounded ${isGood ? 'bg-blue-950 text-blue-300 border border-blue-800' : 'bg-red-950 text-red-300 border border-red-800'} font-bold mt-1">${assigned.name} (${isGood ? '好人' : '壞人'})</span>` : '<span class="text-[9px] text-slate-500">等待分配</span>'}
                         </div>
                     `;
                 }
@@ -868,7 +834,7 @@
         const mockRooms = [
             { id: "r1", name: "【高手專場】語音交流局", players: 12, current: 8, host: "血月王爵", status: "waiting" },
             { id: "r2", name: "9人速殺娛樂局", players: 9, current: 9, host: "愛吃肉包", status: "playing" },
-            { id: "r3", name: "10人標準競賽房", players: 10, current: 4, host: "月光獵手", status: "waiting" }
+            { id: "r3", name: "6人新手教學房", players: 6, current: 3, host: "月光獵手", status: "waiting" }
         ];
 
         function renderRoomList() {
@@ -894,7 +860,7 @@
                             <i class="fa-solid fa-users text-slate-500 mr-1"></i>
                             <span>${room.current}</span> / <span>${room.players} 人</span>
                         </div>
-                        <button onclick="enterMockRoom('${room.name}', ${room.players}, '${room.host}')" class="px-4 py-1.5 bg-gold-500/10 hover:bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-bold rounded-xl transition">
+                        <button onclick="enterMockRoom('${room.name}', ${room.players},'${room.host}')" class="px-4 py-1.5 bg-gold-500/10 hover:bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-bold rounded-xl transition">
                             加入房間
                         </button>
                     </div>
@@ -905,6 +871,7 @@
         window.enterMockRoom = function(name, capacity, host) {
             activeRoom = { name, capacity, host };
             isRoomLocked = false;
+            assignedRolesList = [];
             openGameRoom(activeRoom);
         };
 
