@@ -240,13 +240,13 @@
                             <span>安全防護已啟動</span>
                         </div>
                         <div>
-                            <span>v2.5.1 Text Edition</span>
+                            <span>v2.6.0 Fix Edition</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. REGISTRATION / ONBOARDING MODAL (僅首次登入觸發) -->
+            <!-- 2. REGISTRATION / ONBOARDING MODAL (僅限全新無暱稱帳號) -->
             <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
                 <div class="relative w-full max-w-md dynamic-card border border-gold-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
                     <div class="corner-bracket corner-tl"></div>
@@ -259,7 +259,7 @@
                             <i class="fa-solid fa-scroll text-xl"></i>
                         </div>
                         <h2 class="font-noto text-2xl font-bold">建立玩家檔案</h2>
-                        <p class="text-xs dynamic-text-muted mt-1">首次登入系統，請填寫基本資訊，資料將永久儲存於資料庫。</p>
+                        <p class="text-xs dynamic-text-muted mt-1">首次登入系統，請填寫暱稱與生日以建立戰局檔案。</p>
                     </div>
 
                     <form id="onboarding-form" onsubmit="handleSaveProfile(event)" class="space-y-4">
@@ -326,9 +326,9 @@
                         </nav>
                     </div>
 
-                    <!-- User Mini Profile Bar -->
-                    <div class="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                        <div class="flex items-center gap-3 overflow-hidden">
+                    <!-- User Mini Profile Bar with Sign Out Button -->
+                    <div class="mt-6 pt-4 border-t border-slate-700/50 flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5 overflow-hidden flex-1">
                             <div class="relative flex-shrink-0">
                                 <img id="sidebar-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-gold-500/70 object-cover">
                                 <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-slate-900"></div>
@@ -338,6 +338,11 @@
                                 <p id="sidebar-email" class="text-[10px] dynamic-text-muted truncate">user@gmail.com</p>
                             </div>
                         </div>
+
+                        <!-- Quick Sign Out Button in Sidebar -->
+                        <button onclick="handleSignOut()" title="登出系統" class="p-2 dynamic-inner hover:bg-red-950/80 hover:text-red-400 text-slate-400 rounded-xl border border-slate-700 transition flex-shrink-0">
+                            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                        </button>
                     </div>
                 </aside>
 
@@ -527,11 +532,11 @@
                         </div>
                     </div>
 
-                    <!-- TAB 5: SETTINGS (全畫面主題版型切換 + 資料庫同步) -->
+                    <!-- TAB 5: SETTINGS (含全畫面主題切換 + 登出帳號) -->
                     <div id="panel-settings" class="tab-panel hidden space-y-6">
                         <div class="border-b border-slate-700/50 pb-4">
                             <h3 class="font-cinzel text-xl font-bold gold-text-gradient">SETTINGS / 系統設定</h3>
-                            <p class="text-xs dynamic-text-muted mt-1">修改玩家暱稱與切換全畫面主題（比照 Google 淺色/深色版型）。設定將永久儲存於資料庫與本地端。</p>
+                            <p class="text-xs dynamic-text-muted mt-1">修改玩家暱稱與切換全畫面主題（比照 Google 淺色/深色版型）。設定將儲存於資料庫與本地端。</p>
                         </div>
 
                         <form onsubmit="handleUpdateSettings(event)" class="space-y-5 max-w-md">
@@ -547,6 +552,11 @@
                                 <div>
                                     <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">修改顯示暱稱</label>
                                     <input type="text" id="settings-nickname-input" required class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2 text-sm outline-none transition">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold dynamic-text-muted mb-1.5">補填/修改生日 (YYYY-MM-DD)</label>
+                                    <input type="date" id="settings-birthdate-input" class="w-full dynamic-input border focus:border-gold-500 rounded-xl px-4 py-2 text-sm outline-none transition">
                                 </div>
 
                                 <div>
@@ -576,6 +586,14 @@
                                 儲存設定變更 (寫入 Database 及本地端)
                             </button>
                         </form>
+
+                        <!-- Logout Danger Zone -->
+                        <div class="pt-6 border-t border-slate-700/50 max-w-md">
+                            <button onclick="handleSignOut()" class="w-full py-3 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/80 font-bold rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-md">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>登出系統 / 切換帳號</span>
+                            </button>
+                        </div>
                     </div>
 
                 </main>
@@ -590,7 +608,8 @@
             getAuth, 
             signInWithPopup, 
             GoogleAuthProvider, 
-            onAuthStateChanged 
+            onAuthStateChanged,
+            signOut
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { 
             getFirestore, 
@@ -604,8 +623,7 @@
             get, 
             set,
             push,
-            onValue,
-            remove
+            onValue
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -631,9 +649,8 @@
         let isRoomLocked = false;
         let assignedRolesList = [];
         let currentThemeClass = 'theme-blood';
-        let isProcessingAuth = false; // 防止重複執行處理
+        let isProcessingAuth = false;
 
-        // 8 種允許的狼人殺身分
         const ALLOWED_ROLES = [
             { id: 'wolf_king', name: '狼王', icon: 'fa-crown', color: 'text-red-500', team: 'bad' },
             { id: 'werewolf', name: '狼人', icon: 'fa-wolf-pack-battalion', color: 'text-red-400', team: 'bad' },
@@ -656,7 +673,6 @@
             guard: 1
         };
 
-        // 套用全畫面 UI 主題 (比照 Google 深淺色機制)
         window.applyTheme = function(themeClass) {
             currentThemeClass = themeClass;
             document.documentElement.className = themeClass;
@@ -690,104 +706,99 @@
 
             const nicknameInput = document.getElementById('settings-nickname-input');
             if (nicknameInput) nicknameInput.value = name;
+
+            const birthdateInput = document.getElementById('settings-birthdate-input');
+            if (birthdateInput && userProfile && userProfile.birthdate) {
+                birthdateInput.value = userProfile.birthdate;
+            }
         }
 
         window.handleGoogleSignIn = async function() {
             if (isProcessingAuth) return;
             try {
                 showToast("連線至 Google 驗證服務...");
-                const result = await signInWithPopup(auth, googleProvider);
-                // Auth 狀態更新交由 onAuthStateChanged 監聽處理，不重複呼叫 processUserAuth
+                await signInWithPopup(auth, googleProvider);
             } catch (error) {
-                console.warn("Popup blocked/fallback:", error);
-                simulateFallbackUser();
+                console.warn("Popup error:", error);
+                showToast("Google 登入失敗或視窗已關閉", "error");
             }
         };
 
-        // 核心流程：優先讀取本地快取 localStorage，確保建立過檔案的玩家 100% 直升主畫面大廳
+        // 核心解法：100% 確保完成過驗證的玩家不會重複卡在 Onboarding Modal
         async function processUserAuth(user) {
             if (!user) return;
             currentUser = user;
-            const storageKey = `werewolf_user_profile_${user.uid}`;
+            const profileStorageKey = `werewolf_user_profile_${user.uid}`;
+            const flagStorageKey = `werewolf_has_profile_${user.uid}`;
 
-            // 1. 優先判斷本地端 localStorage 快取
-            const cachedProfile = localStorage.getItem(storageKey);
-            if (cachedProfile) {
+            // 條件 1: 本機已有已註冊旗標 OR 有本地快取 -> 0秒直升大廳！
+            const hasLocalFlag = localStorage.getItem(flagStorageKey) === 'true';
+            const cachedProfile = localStorage.getItem(profileStorageKey);
+
+            if (hasLocalFlag || cachedProfile) {
                 try {
-                    userProfile = JSON.parse(cachedProfile);
-                    if (userProfile.theme) {
-                        applyTheme(userProfile.theme);
-                    }
+                    userProfile = cachedProfile ? JSON.parse(cachedProfile) : {
+                        uid: user.uid,
+                        nickname: user.displayName || "狼人殺玩家",
+                        photoURL: user.photoURL,
+                        email: user.email,
+                        theme: currentThemeClass
+                    };
+                    if (userProfile.theme) applyTheme(userProfile.theme);
                     updateUserUI(user);
                     showDashboard();
                     showToast(`歡迎回來，${userProfile.nickname}！`);
-                    
-                    // 背景靜默同步最新雲端資料
-                    syncCloudProfile(user.uid, storageKey);
                     return;
                 } catch (e) {
-                    console.warn("Failed to parse cached profile:", e);
+                    console.warn("Cached profile parse fail:", e);
                 }
             }
 
-            // 2. 本地無快取時，向 Firebase Realtime Database 與 Firestore 查詢
+            // 條件 2: Google 帳號本身已有 displayName，自動認定為有效使用者，直進入大廳，不強制彈窗
+            if (user.displayName) {
+                userProfile = {
+                    uid: user.uid,
+                    nickname: user.displayName,
+                    photoURL: user.photoURL || 'https://via.placeholder.com/150',
+                    email: user.email || '',
+                    theme: currentThemeClass,
+                    createdAt: Date.now()
+                };
+                localStorage.setItem(profileStorageKey, JSON.stringify(userProfile));
+                localStorage.setItem(flagStorageKey, 'true');
+                updateUserUI(user);
+                showDashboard();
+                showToast(`歡迎進入戰局，${userProfile.nickname}！`);
+
+                // 異步備份至資料庫
+                try {
+                    await set(ref(db, 'users/' + user.uid), userProfile);
+                } catch (e) {}
+                return;
+            }
+
+            // 條件 3: 資料庫查詢
             try {
                 const snapshot = await get(ref(db, 'users/' + user.uid));
                 if (snapshot.exists() && snapshot.val().nickname) {
                     userProfile = snapshot.val();
-                    localStorage.setItem(storageKey, JSON.stringify(userProfile));
-                    if (userProfile.theme) {
-                        applyTheme(userProfile.theme);
-                    }
+                    localStorage.setItem(profileStorageKey, JSON.stringify(userProfile));
+                    localStorage.setItem(flagStorageKey, 'true');
+                    if (userProfile.theme) applyTheme(userProfile.theme);
                     updateUserUI(user);
                     showDashboard();
                     showToast(`歡迎回來，${userProfile.nickname}！`);
                     return;
                 }
-
-                // 備用：從 Firestore 檢查
-                const firestoreDoc = await getDoc(doc(firestore, "users", user.uid));
-                if (firestoreDoc.exists() && firestoreDoc.data().nickname) {
-                    userProfile = firestoreDoc.data();
-                    localStorage.setItem(storageKey, JSON.stringify(userProfile));
-                    if (userProfile.theme) {
-                        applyTheme(userProfile.theme);
-                    }
-                    updateUserUI(user);
-                    showDashboard();
-                    showToast(`歡迎回來，${userProfile.nickname}！`);
-                    return;
-                }
-
-                // 3. 確定資料庫完全沒有資料，才顯示首次建立檔案 Modal (註冊)
-                document.getElementById('reg-nickname').value = user.displayName || '';
-                updateUserUI(user);
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('onboarding-modal').classList.remove('hidden');
-
             } catch (err) {
-                console.warn("User auth database check failed:", err);
-                // 若網路異常但無快取，仍停留在登入頁或引導填寫
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('onboarding-modal').classList.remove('hidden');
+                console.warn("Database fetch error, auto fallthrough to dashboard:", err);
             }
-        }
 
-        // 背景靜默同步雲端 Profile 資料
-        async function syncCloudProfile(uid, storageKey) {
-            try {
-                const snapshot = await get(ref(db, 'users/' + uid));
-                if (snapshot.exists() && snapshot.val().nickname) {
-                    userProfile = snapshot.val();
-                    localStorage.setItem(storageKey, JSON.stringify(userProfile));
-                    if (userProfile.theme) {
-                        applyTheme(userProfile.theme);
-                    }
-                    updateUserUI(currentUser);
-                }
-            } catch (e) {
-                console.log("Silent cloud sync failed, using cached data.", e);
-            }
+            // 只有完全沒有暱稱的情況下才跳出填寫 Modal
+            document.getElementById('reg-nickname').value = user.displayName || '';
+            updateUserUI(user);
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('onboarding-modal').classList.remove('hidden');
         }
 
         window.handleSaveProfile = async function(e) {
@@ -795,72 +806,81 @@
             const nickname = document.getElementById('reg-nickname').value.trim();
             const birthdate = document.getElementById('reg-birthdate').value;
 
-            if (!nickname || !birthdate) return showToast("請填寫完整的玩家資訊", "error");
+            if (!nickname) return showToast("請輸入暱稱", "error");
 
-            const uid = currentUser ? currentUser.uid : 'simulated_' + Date.now();
+            const uid = currentUser ? currentUser.uid : 'user_' + Date.now();
             userProfile = {
                 uid: uid,
                 nickname: nickname,
-                birthdate: birthdate,
+                birthdate: birthdate || '',
                 photoURL: currentUser ? currentUser.photoURL : 'https://via.placeholder.com/150',
                 email: currentUser ? currentUser.email : 'user@gmail.com',
                 theme: currentThemeClass,
                 createdAt: Date.now()
             };
 
-            // 寫入 localStorage 本地端快取 (防再次跳 Modal 的核心保障)
-            const storageKey = `werewolf_user_profile_${uid}`;
-            localStorage.setItem(storageKey, JSON.stringify(userProfile));
+            // 寫入萬無一失的通關旗標與 LocalStorage
+            localStorage.setItem(`werewolf_user_profile_${uid}`, JSON.stringify(userProfile));
+            localStorage.setItem(`werewolf_has_profile_${uid}`, 'true');
 
-            // 寫入遠端資料庫
             try {
                 await set(ref(db, 'users/' + uid), userProfile);
                 await setDoc(doc(firestore, "users", uid), userProfile);
             } catch (dbErr) {
-                console.log("Database write note:", dbErr);
+                console.log("DB save note:", dbErr);
             }
 
             document.getElementById('onboarding-modal').classList.add('hidden');
             updateUserUI(currentUser);
             showDashboard();
-            showToast("玩家檔案建立完成，資料已儲存至 Database 與本地端！");
+            showToast("個人檔案建立成功！");
         };
 
-        // 儲存設定頁面更新 (同步更新 localStorage 與 Database)
         window.handleUpdateSettings = async function(e) {
             e.preventDefault();
             if (!userProfile) return;
 
             const newNickname = document.getElementById('settings-nickname-input').value.trim();
+            const newBirthdate = document.getElementById('settings-birthdate-input').value;
+
             if (!newNickname) return showToast("暱稱不能留空", "error");
 
             userProfile.nickname = newNickname;
+            if (newBirthdate) userProfile.birthdate = newBirthdate;
             userProfile.theme = currentThemeClass;
 
-            // 同步寫入 localStorage 本地快取
-            const storageKey = `werewolf_user_profile_${userProfile.uid}`;
-            localStorage.setItem(storageKey, JSON.stringify(userProfile));
+            const uid = userProfile.uid;
+            localStorage.setItem(`werewolf_user_profile_${uid}`, JSON.stringify(userProfile));
+            localStorage.setItem(`werewolf_has_profile_${uid}`, 'true');
 
             try {
-                await set(ref(db, 'users/' + userProfile.uid), userProfile);
-                await setDoc(doc(firestore, "users", userProfile.uid), userProfile);
-                updateUserUI(currentUser);
-                showToast("設定與全畫面主題已更新並同步！");
-            } catch (err) {
-                updateUserUI(currentUser);
-                showToast("設定已儲存於本地端！");
-            }
+                await set(ref(db, 'users/' + uid), userProfile);
+                await setDoc(doc(firestore, "users", uid), userProfile);
+            } catch (err) {}
+
+            updateUserUI(currentUser);
+            showToast("設定與主題已更新！");
         };
 
-        function simulateFallbackUser() {
-            currentUser = {
-                uid: "demo_user_101",
-                displayName: "血月玩家",
-                email: "werewolf.player@gmail.com",
-                photoURL: "https://lh3.googleusercontent.com/a/ACg8ocI8d4i-eN9K3h2_P4c?sz=96"
-            };
-            processUserAuth(currentUser);
-        }
+        // 登出帳號功能
+        window.handleSignOut = async function() {
+            try {
+                showToast("正在登出系統...");
+                await signOut(auth);
+                currentUser = null;
+                userProfile = null;
+                currentRoomId = null;
+
+                // 介面切回登入頁
+                document.getElementById('main-dashboard').classList.add('hidden');
+                document.getElementById('onboarding-modal').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+
+                showToast("您已成功登出系統");
+            } catch (error) {
+                showToast("登出時發生錯誤", "error");
+            }
+        };
 
         function showDashboard() {
             document.getElementById('login-screen').classList.add('hidden');
@@ -885,7 +905,6 @@
             });
         };
 
-        // 創建真實房間並寫入 Realtime Database
         window.handleCreateRoom = async function(e) {
             e.preventDefault();
             const name = document.getElementById('room-name').value.trim();
@@ -917,15 +936,13 @@
                 openGameRoom(roomData);
                 showToast("實體房間建立成功！已同步至大廳");
             } catch (err) {
-                // Fallback 本地建立
                 currentRoomId = 'room_' + Date.now();
                 roomData.id = currentRoomId;
                 openGameRoom(roomData);
-                showToast("房間已建立 (單機防護模式)");
+                showToast("房間已建立 (離線保護模式)");
             }
         };
 
-        // 僅監聽與渲染「真實」資料庫房間
         function listenRealtimeRooms() {
             const container = document.getElementById('room-list-container');
             if (!container) return;
@@ -1161,7 +1178,6 @@
             grid.innerHTML = html;
         }
 
-        // 即時文字訊息聊天室串接
         window.handleSendChatMessage = async function(e) {
             e.preventDefault();
             const input = document.getElementById('chat-input');
@@ -1258,13 +1274,18 @@
             }, 3000);
         };
 
-        // Firebase Auth 狀態變更統一處理 entry point
+        // Firebase Auth 監聽
         onAuthStateChanged(auth, (user) => {
             if (user && !isProcessingAuth) {
                 isProcessingAuth = true;
                 processUserAuth(user).finally(() => {
                     isProcessingAuth = false;
                 });
+            } else if (!user) {
+                // 未登入時回歸 Login 介面
+                document.getElementById('main-dashboard').classList.add('hidden');
+                document.getElementById('onboarding-modal').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
             }
         });
     </script>
